@@ -1,4 +1,3 @@
-
 # Swarm Algorithms
 
 This repository contains implementations of swarm algorithms, specifically focusing on Particle Swarm Optimization (PSO). The code is written in C++ and includes visualization using Gnuplot.
@@ -72,6 +71,8 @@ gnuplot -e "ITERATE_MAX=100" animate_particles.plt
 Make sure to replace `ITERATE_MAX` with the actual number of iterations used in the C++ code.
 
 The Gnuplot script will create an animated visualization of the particles moving towards the optimal solution. The global best position will be highlighted in red.
+
+![pso animation](https://gitlab.com/aminse/swarm-intelligence/-/blob/main/images/swarm.gif)
 
 ## Contributing
 
