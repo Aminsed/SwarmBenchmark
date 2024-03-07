@@ -72,7 +72,7 @@ Make sure to replace `ITERATE_MAX` with the actual number of iterations used in 
 
 The Gnuplot script will create an animated visualization of the particles moving towards the optimal solution. The global best position will be highlighted in red.
 
-![pso animation](https://gitlab.com/aminse/swarm-intelligence/-/blob/main/images/swarm.gif)
+![ALT text](https://gitlab.com/aminse/swarm-intelligence/-/blob/main/images/swarm.gif)
 
 ## Contributing
 
