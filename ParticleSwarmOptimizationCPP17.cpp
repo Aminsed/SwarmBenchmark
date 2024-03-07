@@ -5,9 +5,10 @@
 #include <cmath>
 #include <algorithm>
 #include <fstream>
+#include <sstream>
 
-constexpr int NUM_PARTICLES = 10000;
-constexpr int MAX_ITERATIONS = 100000;
+constexpr int NUM_PARTICLES = 1000;
+constexpr int MAX_ITERATIONS = 100;
 constexpr double SEARCH_SPACE_MIN = -5.12;
 constexpr double SEARCH_SPACE_MAX = 5.12;
 constexpr double INERTIA_WEIGHT = 0.729;
@@ -46,6 +47,16 @@ int main() {
 
     std::uniform_real_distribution<double> r_dist(0, 1);
     for (int iteration = 0; iteration < MAX_ITERATIONS; ++iteration) {
+        std::ostringstream oss;
+        oss << "particles_" << iteration << ".txt";
+        std::string particleFileName = oss.str();
+        std::ofstream particleFile(particleFileName);
+
+        for (const auto& particle : swarm) {
+            particleFile << particle.position.first << " " << particle.position.second << "\n";
+        }
+        particleFile << "\n\n";
+
         for (auto& particle : swarm) {
             particle.bestValue = std::min(particle.bestValue, objectiveFunction(particle.position));
             if (particle.bestValue < objectiveFunction(particle.bestPosition)) {
@@ -71,14 +82,8 @@ int main() {
     }
 
     auto endTime = std::chrono::high_resolution_clock::now();
-    std::ofstream particleFile("particles.txt");
+
     std::ofstream bestPositionFile("best_position.txt");
-
-    for (const auto& particle : swarm) {
-        particleFile << particle.position.first << " " << particle.position.second << "\n";
-    }
-    particleFile << "\n\n";
-
     bestPositionFile << globalBestPosition.first << " " << globalBestPosition.second << "\n";
 
     auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(endTime - startTime);
@@ -86,4 +91,6 @@ int main() {
     std::cout << "Global Best Position: (" << globalBestPosition.first << ", " << globalBestPosition.second << ")\n";
     std::cout << "Global Best Value: " << globalBestValue << "\n";
     std::cout << "Execution Time: " << duration.count() << " milliseconds\n";
+
+    return 0;
 }
