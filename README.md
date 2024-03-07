@@ -1,4 +1,4 @@
-```markdown
+
 # Swarm Algorithms
 
 This repository contains implementations of swarm algorithms, specifically focusing on Particle Swarm Optimization (PSO). The code is written in C++ and includes visualization using Gnuplot.
@@ -80,4 +80,3 @@ Contributions to this repository are welcome. If you find any issues or have sug
 ## License
 
 This project is licensed under the [MIT License](LICENSE).
-```
