@@ -1,84 +1,56 @@
-# Swarm Algorithms
+# Swarm Intelligence Algorithms Repository
 
-This repository contains implementations of swarm algorithms, specifically focusing on Particle Swarm Optimization (PSO). The code is written in C++ and includes visualization using Gnuplot.
+Welcome to the Swarm Intelligence Algorithms Repository! This repository contains implementations of various swarm intelligence algorithms in C++, OpenMP, and CUDA. The goal of this repository is to provide a comprehensive collection of swarm intelligence algorithms for educational and research purposes.
 
-## Table of Contents
+## Algorithms Included
 
-- [Introduction](#introduction)
-- [Requirements](#requirements)
-- [Installation](#installation)
-- [Usage](#usage)
-- [Visualization](#visualization)
-- [Contributing](#contributing)
-- [License](#license)
+1. Particle Swarm Optimization (PSO) ✅
+2. Ant Colony Optimization (ACO)
+3. Firefly Algorithm (FA)
+4. Artificial Bee Colony (ABC) Algorithm
+5. Cuckoo Search (CS) Algorithm
+6. Bat Algorithm (BA)
+7. Grey Wolf Optimizer (GWO)
+8. Whale Optimization Algorithm (WOA)
+9. Fireworks Algorithm (FWA)
+10. Artificial Fish Swarm Algorithm (AFSA)
+11. Krill Herd (KH) Algorithm
+12. Glowworm Swarm Optimization (GSO)
+13. Moth-Flame Optimization (MFO) Algorithm
+14. Dragonfly Algorithm (DA)
+15. Gravitational Search Algorithm (GSA)
+16. Artificial Immune System (AIS) Algorithms
+17. Bacterial Foraging Optimization (BFO) Algorithm
+18. Artificial Algae Algorithm (AAA)
+19. Lion Optimization Algorithm (LOA)
+20. Squirrel Search Algorithm (SSA)
 
-## Introduction
+## Repository Structure
 
-Swarm algorithms are a class of nature-inspired algorithms that mimic the collective behavior of swarms, such as birds, fish, or insects. These algorithms are used for optimization problems, where the goal is to find the best solution among a set of possible solutions.
+Each algorithm has its own dedicated folder, named after the algorithm's abbreviation (e.g., PSO, ACO, FA). Within each algorithm folder, you will find three subfolders:
 
-Particle Swarm Optimization (PSO) is a popular swarm algorithm that simulates the movement of particles in a search space. Each particle represents a potential solution and adjusts its position based on its own best position and the best position found by the swarm as a whole. Over iterations, the particles converge towards the optimal solution.
+- `CPP`: Contains the pure C++ implementation of the algorithm.
+- `OMP`: Contains the OpenMP implementation of the algorithm for parallel processing.
+- `CUDA`: Contains the CUDA implementation of the algorithm for GPU acceleration.
 
-## Requirements
+Inside each subfolder, you will find the respective code files and a README file with instructions on how to compile and run the code.
 
-To run the code in this repository, you need:
+## Getting Started
 
-- C++ compiler (supporting C++17 or later)
-- Gnuplot (for visualization)
-
-## Installation
-
-1. Clone the repository:
-
-  ```bash
-  git clone https://gitlab.com/aminse/swarm-intelligence.git
-  ```
-
-2. Navigate to the cloned directory:
-
-  ```bash
-  cd swarm-algorithms
-  ```
-
-3. Compile the C++ code:
-
-  ```bash
-  g++ -std=c++17 pso.cpp -o pso
-  ```
-
-## Usage
-
-To run the PSO algorithm and generate the data files for visualization, execute the compiled program:
-
-```bash
-./pso
-```
-
-The program will run the PSO algorithm and generate the following files:
-
-- `particles_<iteration>.txt`: Contains the positions of all particles at each iteration.
-- `best_position.txt`: Contains the global best position found by the algorithm.
-
-The program will also display the global best position, global best value, and execution time in the console.
-
-## Visualization
-
-To visualize the movement of particles over iterations, use the provided Gnuplot script:
-
-```bash
-gnuplot -e "ITERATE_MAX=100" animate_particles.plt
-```
-
-Make sure to replace `ITERATE_MAX` with the actual number of iterations used in the C++ code.
-
-The Gnuplot script will create an animated visualization of the particles moving towards the optimal solution. The global best position will be highlighted in red.
-
-![Alt Text](https://gitlab.com/aminse/swarm-intelligence/-/raw/main/images/swarm.gif)
-
+To get started with any of the algorithms, navigate to the desired algorithm's folder and choose the implementation you want to use (CPP, OMP, or CUDA). Follow the instructions provided in the respective README file to compile and run the code.
 
 ## Contributing
 
-Contributions to this repository are welcome. If you find any issues or have suggestions for improvements, please open an issue or submit a pull request.
+Contributions to this repository are welcome! If you have an implementation of a swarm intelligence algorithm that is not currently included, or if you want to improve an existing implementation, please submit a pull request. Make sure to follow the repository's structure and provide clear instructions on how to compile and run your code.
 
 ## License
 
-This project is licensed under the [MIT License](LICENSE).
+This repository is licensed under the [MIT License](LICENSE). Feel free to use the code for educational and research purposes. If you use any of the implementations in your work, please consider citing this repository.
+
+## Acknowledgments
+
+We would like to thank all the contributors who have helped in building and maintaining this repository. Your efforts are greatly appreciated!
+
+If you have any questions or suggestions, please open an issue or contact the repository maintainer.
+
+Happy exploring and optimizing with swarm intelligence algorithms!
