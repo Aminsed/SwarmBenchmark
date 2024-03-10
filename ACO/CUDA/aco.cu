@@ -46,9 +46,11 @@ __global__ void updatePheromonesKernel(double* pheromones, int* tour, double tou
     int antIndex = blockIdx.x;
     int i = threadIdx.x;
 
-    if (i < numberOfCities) {
-        printf("Ant %d: Tour[%d] = %d\n", antIndex, i, tour[i]);
+    printf("Ant %d: Tour = [", antIndex);
+    for (int j = 0; j < numberOfCities; j++) {
+        printf("%d ", tour[j]);
     }
+    printf("]\n");
 
     if (i < numberOfCities - 1) {
         int city1 = tour[i];
@@ -110,12 +112,16 @@ void updatePheromones(double* d_pheromones, int* d_tours, double* d_lengths) {
     cout << "Evaporating pheromones..." << endl;
     evaporatePheromonesKernel<<<gridSize, blockSize>>>(d_pheromones, numberOfCities);
     CUDA_CHECK(cudaDeviceSynchronize());
+    CUDA_CHECK(cudaGetLastError());
 
     for (int i = 0; i < numberOfAnts; i++) {
         cout << "Updating pheromones for ant " << i << endl;
-        updatePheromonesKernel<<<(numberOfCities + 255) / 256, 256>>>(d_pheromones, d_tours + i * numberOfCities, d_lengths[i], numberOfCities);
+        updatePheromonesKernel<<<1, numberOfCities>>>(d_pheromones, d_tours + i * numberOfCities, d_lengths[i], numberOfCities);
         CUDA_CHECK(cudaDeviceSynchronize());
+        CUDA_CHECK(cudaGetLastError());
     }
+
+    cout << "Pheromone update completed" << endl;
 }
 
 double calculateProbability(int from, int to, bool* visited) {
