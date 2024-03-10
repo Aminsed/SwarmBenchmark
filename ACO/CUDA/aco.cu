@@ -48,6 +48,8 @@ __global__ void updatePheromonesKernel(double* pheromones, int* tour, double tou
     if (i < numberOfCities - 1) {
         int city1 = tour[i];
         int city2 = tour[i + 1];
+        printf("Ant %d: City1 = %d, City2 = %d\n", blockIdx.x, city1, city2);
+        printf("Ant %d: Pheromone index = %d\n", blockIdx.x, city1 * numberOfCities + city2);
         if (city1 >= 0 && city1 < numberOfCities && city2 >= 0 && city2 < numberOfCities) {
             double contribution = Q / tourLength;
             printf("Updating pheromone for edge (%d, %d) with contribution %f\n", city1, city2, contribution);
@@ -60,6 +62,8 @@ __global__ void updatePheromonesKernel(double* pheromones, int* tour, double tou
     if (i == 0) {
         int city1 = tour[numberOfCities - 1];
         int city2 = tour[0];
+        printf("Ant %d: City1 = %d, City2 = %d\n", blockIdx.x, city1, city2);
+        printf("Ant %d: Pheromone index = %d\n", blockIdx.x, city1 * numberOfCities + city2);
         if (city1 >= 0 && city1 < numberOfCities && city2 >= 0 && city2 < numberOfCities) {
             double contribution = Q / tourLength;
             printf("Updating pheromone for edge (%d, %d) with contribution %f\n", city1, city2, contribution);
