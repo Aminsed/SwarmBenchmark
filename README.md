@@ -107,7 +107,7 @@ Welcome to the Swarm Intelligence Algorithms Repository! This repository contain
 
 ## Repository Structure
 
-Each algorithm has its own dedicated folder, named after the algorithm's abbreviation (e.g., PSO, ACO, FA). Within each algorithm folder, you will find three subfolders:
+Each algorithm has its own dedicated folder, named after the algorithm's abbreviation (e.g., PSO, ACO, FA). Within each algorithm folder, you will find four subfolders:
 
 - `CPP`: Contains the pure C++ implementation of the algorithm.
 - `OMP`: Contains the OpenMP implementation of the algorithm for parallel processing.
