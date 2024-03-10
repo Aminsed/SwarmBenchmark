@@ -1,174 +1,234 @@
-// ... (previous code remains the same)
+#include <iostream>
+#include <vector>
+#include <cmath>
+#include <limits>
+#include <algorithm>
+#include <stdlib.h>
+#include <time.h>
+#include <cuda_runtime.h>
 
-__global__ void antKernel(double* d_distances, double* d_pheromones, int* d_tours, double* d_lengths, curandState* state) {
-    int antId = threadIdx.x + blockIdx.x * blockDim.x;
+using namespace std;
 
-    extern __shared__ bool visited[];
-    double* probabilities = (double*)&visited[d_numberOfCities];
+const double alpha = 1.0; // pheromone importance
+const double betaValue = 5.0; // distance priority
+const double evaporation = 0.5;
+const double Q = 100; // pheromone left on trail per ant
+const double antFactor = 0.8; // No. of ants per city
 
-    if (antId < d_numberOfAnts) {
-        for (int i = 0; i < d_numberOfCities; i++) {
-            visited[i] = false;
-        }
+int numberOfCities = 10;
+int numberOfAnts = 5;
+vector<vector<double>> distances;
+vector<vector<double>> pheromones;
 
-        int startCity = curand(&state[antId]) % d_numberOfCities;
-        visited[startCity] = true;
-        d_tours[antId * d_numberOfCities] = startCity;
+vector<int> bestTour;
+double bestTourLength = numeric_limits<double>::max();
 
-        for (int i = 1; i < d_numberOfCities; i++) {
-            int currentCity = d_tours[antId * d_numberOfCities + i - 1];
-            double sumProbabilities = 0.0;
+#define CUDA_CHECK(call) \
+    do { \
+        cudaError_t err = call; \
+        if (err != cudaSuccess) { \
+            printf("CUDA error: %s at %s:%d\n", cudaGetErrorString(err), __FILE__, __LINE__); \
+            exit(EXIT_FAILURE); \
+        } \
+    } while (0)
 
-            for (int j = 0; j < d_numberOfCities; j++) {
-                if (!visited[j]) {
-                    double pheromone = pow(d_pheromones[currentCity * d_numberOfCities + j], d_alpha);
-                    double distance = d_distances[currentCity * d_numberOfCities + j];
-                    double probability = pheromone / distance;
-                    probabilities[j] = probability;
-                    sumProbabilities += probability;
-                }
-            }
+__global__ void evaporatePheromonesKernel(double* pheromones, int numberOfCities) {
+    int i = blockIdx.x * blockDim.x + threadIdx.x;
+    int j = blockIdx.y * blockDim.y + threadIdx.y;
 
-            double random = curand_uniform(&state[antId]);
-            double cumulativeProbability = 0.0;
-            int nextCity = -1;
-
-            for (int j = 0; j < d_numberOfCities; j++) {
-                if (!visited[j]) {
-                    probabilities[j] /= sumProbabilities;
-                    cumulativeProbability += probabilities[j];
-                    if (random <= cumulativeProbability) {
-                        nextCity = j;
-                        break;
-                    }
-                }
-            }
-
-            if (nextCity == -1) {
-                printf("Error: No unvisited city found for ant %d at iteration %d\n", antId, i);
-            }
-
-            d_tours[antId * d_numberOfCities + i] = nextCity;
-            visited[nextCity] = true;
-            d_lengths[antId] += d_distances[currentCity * d_numberOfCities + nextCity];
-        }
-
-        d_lengths[antId] += d_distances[d_tours[antId * d_numberOfCities + d_numberOfCities - 1] * d_numberOfCities + startCity];
-
-        printf("Ant %d tour length: %f\n", antId, d_lengths[antId]);
+    if (i < numberOfCities && j < numberOfCities) {
+        pheromones[i * numberOfCities + j] *= evaporation;
     }
 }
 
-__global__ void updatePheromonesKernel(double* d_pheromones, int* d_tours, double* d_lengths) {
-    int x = threadIdx.x + blockIdx.x * blockDim.x;
-    int y = threadIdx.y + blockIdx.y * blockDim.y;
+__global__ void updatePheromonesKernel(double* pheromones, int* tour, double tourLength, int numberOfCities) {
+    int i = blockIdx.x * blockDim.x + threadIdx.x;
 
-    if (x < d_numberOfCities && y < d_numberOfCities) {
-        d_pheromones[x * d_numberOfCities + y] *= evaporation;
+    if (i < numberOfCities - 1) {
+        double contribution = Q / tourLength;
+        pheromones[tour[i] * numberOfCities + tour[i + 1]] += contribution;
+    }
 
-        for (int i = 0; i < d_numberOfAnts; i++) {
-            double contribution = Q / d_lengths[i];
-            for (int j = 0; j < d_numberOfCities - 1; j++) {
-                int city1 = d_tours[i * d_numberOfCities + j];
-                int city2 = d_tours[i * d_numberOfCities + j + 1];
-                if ((city1 == x && city2 == y) || (city1 == y && city2 == x)) {
-                    d_pheromones[x * d_numberOfCities + y] += contribution;
-                }
-            }
-            int lastCity = d_tours[i * d_numberOfCities + d_numberOfCities - 1];
-            int firstCity = d_tours[i * d_numberOfCities];
-            if ((lastCity == x && firstCity == y) || (lastCity == y && firstCity == x)) {
-                d_pheromones[x * d_numberOfCities + y] += contribution;
-            }
-        }
+    if (i == 0) {
+        double contribution = Q / tourLength;
+        pheromones[tour[numberOfCities - 1] * numberOfCities + tour[0]] += contribution;
     }
 }
 
-void findBestTour(double* d_distances, double* d_pheromones, int* d_tours, double* d_lengths, curandState* state) {
-    for (int iteration = 0; iteration < 100; iteration++) {
-        initializeLengthsKernel<<<(numberOfAnts + 255) / 256, 256>>>(d_lengths);
-        cudaDeviceSynchronize();
+void initialize() {
+    distances.resize(numberOfCities, vector<double>(numberOfCities));
+    pheromones.resize(numberOfCities, vector<double>(numberOfCities, 1));
 
-        antKernel<<<(numberOfAnts + 255) / 256, 256, (numberOfCities * sizeof(bool)) + (numberOfCities * sizeof(double))>>>(d_distances, d_pheromones, d_tours, d_lengths, state);
-        cudaDeviceSynchronize();
-
-        double h_lengths[numberOfAnts];
-        cudaMemcpy(h_lengths, d_lengths, numberOfAnts * sizeof(double), cudaMemcpyDeviceToHost);
-
-        for (int i = 0; i < numberOfAnts; i++) {
-            printf("Iteration %d, Ant %d tour length: %f\n", iteration, i, h_lengths[i]);
-
-            if (h_lengths[i] < bestTourLength) {
-                bestTourLength = h_lengths[i];
-                int h_tour[numberOfCities];
-                cudaMemcpy(h_tour, d_tours + i * numberOfCities, numberOfCities * sizeof(int), cudaMemcpyDeviceToHost);
-                bestTour.assign(h_tour, h_tour + numberOfCities);
-
-                printf("New best tour found at iteration %d, Ant %d, Length: %f\n", iteration, i, bestTourLength);
-            }
-        }
-
-        dim3 blockSize(32, 32);
-        dim3 gridSize((numberOfCities + blockSize.x - 1) / blockSize.x, (numberOfCities + blockSize.y - 1) / blockSize.y);
-        updatePheromonesKernel<<<gridSize, blockSize>>>(d_pheromones, d_tours, d_lengths);
-        cudaDeviceSynchronize();
-    }
-}
-
-
-int main() {
-    numberOfAnts = (int)(numberOfCities * antFactor);
-
-    double h_distances[numberOfCities * numberOfCities];
-    double h_pheromones[numberOfCities * numberOfCities];
-
+    srand(time(NULL)); // seed for random number generator
     for (int i = 0; i < numberOfCities; i++) {
         for (int j = i + 1; j < numberOfCities; j++) {
-            double dist = rand() % 100 + 1;
-            h_distances[i * numberOfCities + j] = dist;
-            h_distances[j * numberOfCities + i] = dist;
+            double dist = rand() % 100 + 1; // distance between cities
+            distances[i][j] = dist;
+            distances[j][i] = dist;
         }
-        h_distances[i * numberOfCities + i] = 0; // Set distance to itself as 0
     }
 
-    fill(h_pheromones, h_pheromones + numberOfCities * numberOfCities, 1.0);
+    cout << "Distances matrix:" << endl;
+    for (int i = 0; i < numberOfCities; i++) {
+        for (int j = 0; j < numberOfCities; j++) {
+            cout << distances[i][j] << " ";
+        }
+        cout << endl;
+    }
+}
 
-    double* d_distances;
+void updatePheromones(double* d_pheromones, int* d_tours, double* d_lengths) {
+    dim3 blockSize(16, 16);
+    dim3 gridSize((numberOfCities + blockSize.x - 1) / blockSize.x, (numberOfCities + blockSize.y - 1) / blockSize.y);
+
+    cout << "Evaporating pheromones..." << endl;
+    evaporatePheromonesKernel<<<gridSize, blockSize>>>(d_pheromones, numberOfCities);
+    CUDA_CHECK(cudaDeviceSynchronize());
+
+    for (int i = 0; i < numberOfAnts; i++) {
+        cout << "Updating pheromones for ant " << i << endl;
+        updatePheromonesKernel<<<(numberOfCities + 255) / 256, 256>>>(d_pheromones, d_tours + i * numberOfCities, d_lengths[i], numberOfCities);
+        CUDA_CHECK(cudaDeviceSynchronize());
+    }
+}
+
+double calculateProbability(int from, int to, bool* visited) {
+    double pheromone = pow(pheromones[from][to], alpha);
+    double inverseDistance = pow(1.0 / distances[from][to], betaValue);
+    if (visited[to]) return 0.0;
+    else return pheromone * inverseDistance;
+}
+
+int selectNextCity(int currentCity, bool* visited) {
+    vector<double> probabilities(numberOfCities);
+    double sumProbabilities = 0.0;
+
+    for (int i = 0; i < numberOfCities; i++) {
+        if (!visited[i]) {
+            probabilities[i] = calculateProbability(currentCity, i, visited);
+            sumProbabilities += probabilities[i];
+        }
+    }
+
+    if (sumProbabilities == 0) return -1; // No unvisited cities
+
+    double random = rand() / (double)RAND_MAX;
+    double cumulativeProbability = 0.0;
+    for (int i = 0; i < numberOfCities; i++) {
+        if (!visited[i]) {
+            probabilities[i] /= sumProbabilities;
+            cumulativeProbability += probabilities[i];
+            if (random <= cumulativeProbability) {
+                return i;
+            }
+        }
+    }
+
+    return -1; // should not reach here
+}
+
+void findBestTour() {
+    size_t availableMemory, totalMemory;
+    CUDA_CHECK(cudaMemGetInfo(&availableMemory, &totalMemory));
+    cout << "Available GPU memory: " << availableMemory << " bytes" << endl;
+    cout << "Total GPU memory: " << totalMemory << " bytes" << endl;
+
     double* d_pheromones;
     int* d_tours;
     double* d_lengths;
-    curandState* d_state;
 
-    cudaMalloc((void**)&d_distances, numberOfCities * numberOfCities * sizeof(double));
-    cudaMalloc((void**)&d_pheromones, numberOfCities * numberOfCities * sizeof(double));
-    cudaMalloc((void**)&d_tours, numberOfAnts * numberOfCities * sizeof(int));
-    cudaMalloc((void**)&d_lengths, numberOfAnts * sizeof(double));
-    cudaMalloc((void**)&d_state, numberOfAnts * sizeof(curandState));
+    size_t pheromonesSize = numberOfCities * numberOfCities * sizeof(double);
+    size_t toursSize = numberOfAnts * numberOfCities * sizeof(int);
+    size_t lengthsSize = numberOfAnts * sizeof(double);
 
-    cudaMemcpy(d_distances, h_distances, numberOfCities * numberOfCities * sizeof(double), cudaMemcpyHostToDevice);
-    cudaMemcpy(d_pheromones, h_pheromones, numberOfCities * numberOfCities * sizeof(double), cudaMemcpyHostToDevice);
+    cout << "Pheromones memory size: " << pheromonesSize << " bytes" << endl;
+    cout << "Tours memory size: " << toursSize << " bytes" << endl;
+    cout << "Lengths memory size: " << lengthsSize << " bytes" << endl;
 
-    cudaMemcpyToSymbol(d_numberOfCities, &numberOfCities, sizeof(int));
-    cudaMemcpyToSymbol(d_numberOfAnts, &numberOfAnts, sizeof(int));
-    cudaMemcpyToSymbol(d_alpha, &alpha, sizeof(double));
-    cudaMemcpyToSymbol(d_betaValue, &betaValue, sizeof(double));
+    if (pheromonesSize + toursSize + lengthsSize > availableMemory) {
+        cout << "Insufficient GPU memory!" << endl;
+        exit(EXIT_FAILURE);
+    }
 
-    setupKernel<<<(numberOfAnts + 255) / 256, 256>>>(d_state);
+    CUDA_CHECK(cudaMalloc(&d_pheromones, pheromonesSize));
+    CUDA_CHECK(cudaMalloc(&d_tours, toursSize));
+    CUDA_CHECK(cudaMalloc(&d_lengths, lengthsSize));
 
-    findBestTour(d_distances, d_pheromones, d_tours, d_lengths, d_state);
+    for (int iteration = 0; iteration < 100; iteration++) {
+        cout << "Iteration " << iteration << endl;
 
-    cout << "Best tour length: " << bestTourLength << endl;
+        vector<vector<int>> tours(numberOfAnts, vector<int>(numberOfCities));
+        vector<double> lengths(numberOfAnts, 0.0);
+
+        for (int i = 0; i < numberOfAnts; i++) {
+            bool visited[numberOfCities] = {false}; // Use a regular boolean array
+            tours[i][0] = rand() % numberOfCities;
+            visited[tours[i][0]] = true;
+
+            cout << "Ant " << i << " starting city: " << tours[i][0] << endl;
+
+            for (int j = 1; j < numberOfCities; j++) {
+                int nextCity = selectNextCity(tours[i][j - 1], visited);
+                if (nextCity == -1) {
+                    cout << "Error: No unvisited city found for ant " << i << " at city " << tours[i][j - 1] << endl;
+                    exit(EXIT_FAILURE);
+                }
+                tours[i][j] = nextCity;
+                visited[nextCity] = true;
+                lengths[i] += distances[tours[i][j - 1]][nextCity];
+
+                cout << "Ant " << i << " city " << j << ": " << nextCity << endl;
+            }
+
+            lengths[i] += distances[tours[i][numberOfCities - 1]][tours[i][0]]; // return to start city
+            cout << "Ant " << i << " tour length: " << lengths[i] << endl;
+
+            if (lengths[i] < bestTourLength) {
+                bestTourLength = lengths[i];
+                bestTour = tours[i];
+                cout << "New best tour found for ant " << i << ": ";
+                for (int j = 0; j < numberOfCities; j++) {
+                    cout << bestTour[j] << " ";
+                }
+                cout << "Length: " << bestTourLength << endl;
+            }
+        }
+
+        cout << "Iteration " << iteration << " best tour length: " << bestTourLength << endl;
+
+        CUDA_CHECK(cudaMemcpy(d_pheromones, pheromones.data(), pheromonesSize, cudaMemcpyHostToDevice));
+        CUDA_CHECK(cudaMemcpy(d_tours, tours.data(), toursSize, cudaMemcpyHostToDevice));
+        CUDA_CHECK(cudaMemcpy(d_lengths, lengths.data(), lengthsSize, cudaMemcpyHostToDevice));
+
+        updatePheromones(d_pheromones, d_tours, d_lengths);
+
+        CUDA_CHECK(cudaMemcpy(pheromones.data(), d_pheromones, pheromonesSize, cudaMemcpyDeviceToHost));
+
+        cout << "Pheromone matrix after iteration " << iteration << ":" << endl;
+        for (int i = 0; i < numberOfCities; i++) {
+            for (int j = 0; j < numberOfCities; j++) {
+                cout << pheromones[i][j] << " ";
+            }
+            cout << endl;
+        }
+    }
+
+    CUDA_CHECK(cudaFree(d_pheromones));
+    CUDA_CHECK(cudaFree(d_tours));
+    CUDA_CHECK(cudaFree(d_lengths));
+}
+
+int main() {
+    initialize();
+    findBestTour();
+
     cout << "Best tour: ";
     for (int i = 0; i < bestTour.size(); i++) {
         cout << bestTour[i] << " ";
     }
     cout << endl;
 
-    cudaFree(d_distances);
-    cudaFree(d_pheromones);
-    cudaFree(d_tours);
-    cudaFree(d_lengths);
-    cudaFree(d_state);
+    cout << "Best tour length: " << bestTourLength << endl;
 
     return 0;
 }
