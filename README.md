@@ -118,7 +118,76 @@ Inside each subfolder, you will find the respective code files and a README file
 
 ## Getting Started
 
-To get started with any of the algorithms, navigate to the desired algorithm's folder and choose the implementation you want to use (CPP, OMP, or CUDA). Follow the instructions provided in the respective README file to compile and run the code.
+To get started with any of the algorithms, navigate to the desired algorithm's folder and choose the implementation you want to use (CPP, OMP, or CUDA).
+
+## Compiling Pure C++ Code
+
+When compiling pure C++ code, you can use a C++ compiler such as g++ (GNU Compiler Collection) or clang++ (Clang C++ Compiler). The compilation process is relatively straightforward.
+
+To compile your C++ code, use the following command:
+```
+g++ -o myProgram myProgram.cpp -O3
+```
+or
+```
+clang++ -o myProgram myProgram.cpp -O3
+```
+Replace `myProgram.cpp` with the actual name of your C++ code file.
+
+The `-O3` flag is an optimization flag that tells the compiler to perform aggressive optimizations on the code. It can help improve the performance of your program.
+
+If your code consists of multiple source files, you can compile them together by listing all the source files in the compilation command:
+```
+g++ -o myProgram myProgram.cpp helper.cpp -O3
+```
+or
+```
+clang++ -o myProgram myProgram.cpp helper.cpp -O3
+```
+
+After successful compilation, you can run your program using:
+```
+./myProgram
+```
+
+## Compiling OpenMP Code
+
+OpenMP is an API for parallel programming in C++. It allows you to write parallel code using compiler directives, making it easier to parallelize your code across multiple CPU cores.
+
+To compile OpenMP code, you need to use a compiler that supports OpenMP, such as g++ or clang++. Additionally, you need to include the appropriate OpenMP flags during compilation.
+
+To compile your OpenMP code using g++, use the following command:
+```
+g++ -o myProgram myProgram.cpp -fopenmp -O3
+```
+or with clang++:
+```
+clang++ -o myProgram myProgram.cpp -fopenmp -O3
+```
+Replace `myProgram.cpp` with the actual name of your OpenMP code file.
+
+The `-fopenmp` flag tells the compiler to enable OpenMP support and link against the OpenMP runtime library.
+
+If your code consists of multiple source files, you can compile them together by listing all the source files in the compilation command:
+```
+g++ -o myProgram myProgram.cpp helper.cpp -fopenmp -O3
+```
+or
+```
+clang++ -o myProgram myProgram.cpp helper.cpp -fopenmp -O3
+```
+
+After successful compilation, you can run your OpenMP program using:
+```
+./myProgram
+```
+
+By default, OpenMP will use all available CPU cores for parallel execution. You can control the number of threads used by setting the `OMP_NUM_THREADS` environment variable before running your program:
+```
+export OMP_NUM_THREADS=4
+./myProgram
+```
+This sets the number of threads to 4, meaning your program will use 4 CPU cores for parallel execution.
 
 ## Compiling CUDA/THRUST Code
 
