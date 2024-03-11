@@ -120,6 +120,55 @@ Inside each subfolder, you will find the respective code files and a README file
 
 To get started with any of the algorithms, navigate to the desired algorithm's folder and choose the implementation you want to use (CPP, OMP, or CUDA). Follow the instructions provided in the respective README file to compile and run the code.
 
+## Compiling CUDA/THRUST Code
+
+When compiling CUDA or THRUST code, it's important to ensure that the code is compiled for the correct GPU architecture. Different GPU architectures have different compute capabilities, and compiling your code with the appropriate architecture flag can significantly impact performance and compatibility.
+
+### Determining GPU Architecture
+
+To determine the GPU architecture of your CUDA-capable device, you can use the `cudaDevice.cu` code provided in this repository. This code queries the device properties and displays important information such as the compute capability, global memory size, shared memory size, and more.
+
+To compile and run `cudaDevice.cu`, follow these steps:
+
+1. Compile the `cudaDevice.cu` code using the following command:
+   ```
+   nvcc -o cudaDevice cudaDevice.cu
+   ```
+2. Run the compiled executable:
+   ```
+   ./cudaDevice
+   ```
+
+The output will provide details about your CUDA-capable device(s). Look for the line that says "CUDA Capability Major/Minor version number" to determine the compute capability of your GPU.
+
+For example, if the output shows:
+```
+CUDA Capability Major/Minor version number: 7.5
+```
+It means your GPU has a compute capability of 7.5.
+
+### Compiling with the Correct Architecture Flag
+
+Once you know the compute capability of your GPU, you can compile your CUDA or THRUST code with the appropriate architecture flag. The architecture flag ensures that the code is optimized for your specific GPU architecture.
+
+To compile your code with the correct architecture flag, use the following command:
+```
+nvcc -o myProgram myProgram.cu -arch=sm_XX
+```
+Replace `myProgram.cu` with the actual name of your CUDA or THRUST code file, and replace `XX` with the compute capability of your GPU.
+
+For example, if your GPU has a compute capability of 7.5, you would compile your code using:
+```
+nvcc -o myProgram myProgram.cu -arch=sm_75
+```
+
+It's important to note that compiling with the correct architecture flag is crucial for several reasons:
+1. Performance: Compiling with the appropriate architecture flag allows the compiler to optimize the code for your specific GPU architecture, resulting in better performance.
+2. Compatibility: Different GPU architectures have different features and capabilities. Compiling with the correct flag ensures that your code is compatible with your GPU and can utilize its available features.
+3. Debugging: If you encounter any issues or errors while running your CUDA or THRUST code, compiling with the correct architecture flag can help in identifying and resolving those issues.
+
+By using the `cudaDevice.cu` code to determine your GPU architecture and compiling your code with the appropriate architecture flag, you can ensure optimal performance and compatibility when running swarm intelligence algorithms on CUDA or THRUST.
+
 ## Contributing
 
 Contributions to this repository are welcome! If you have an implementation of a swarm intelligence algorithm that is not currently included, or if you want to improve an existing implementation, please submit a pull request. Make sure to follow the repository's structure and provide clear instructions on how to compile and run your code.
