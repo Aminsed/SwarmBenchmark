@@ -4,11 +4,11 @@ Welcome to the Swarm Intelligence Algorithms Repository! This repository contain
 
 ## Algorithms Included
 
-1. Particle Swarm Optimization (PSO)
-   - CPP  ✅
+1. Particle Swarm Optimization (PSO) ✅
+   - CPP ✅
    - OMP ✅
    - CUDA ✅
-   - THRUST
+   - THRUST ✅
 2. Ant Colony Optimization (ACO)
    - CPP ✅
    - OMP ✅
