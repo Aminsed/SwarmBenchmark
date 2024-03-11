@@ -151,10 +151,6 @@ It means your GPU has a compute capability of 7.5.
 
 Once you know the compute capability of your GPU, you can compile your CUDA or THRUST code with the appropriate architecture flag. The architecture flag ensures that the code is optimized for your specific GPU architecture.
 
-To compile your code with the correct architecture flag, use the following command:
-```
-nvcc -o myProgram myProgram.cu -arch=sm_XX
-```
 Replace `myProgram.cu` with the actual name of your CUDA or THRUST code file, and replace `XX` with the compute capability of your GPU.
 
 For example, if your GPU has a compute capability of 7.5, you would compile your code using:
