@@ -4,11 +4,6 @@ Welcome to the Swarm Intelligence Algorithms Repository! This repository contain
 
 ## Algorithms Included
 
-
-Artificial Fish Swarm Algorithm (AFSA)
-Krill Herd (KH) Algorithm
-Shuffled Frog Leaping Algorithm (SFLA)
-
 1. Particle Swarm Optimization (PSO) ✅
    - CPP ✅
    - OMP ✅
@@ -19,7 +14,7 @@ Shuffled Frog Leaping Algorithm (SFLA)
    - OMP 
    - CUDA
    - THRUST
-3. Cuckoo Search (CS) Algorithm
+3. Moth-Flame Optimization (MFO) Algorithm
    - CPP
    - OMP
    - CUDA
@@ -29,34 +24,34 @@ Shuffled Frog Leaping Algorithm (SFLA)
    - OMP
    - CUDA
    - THRUST
-5. Artificial Bee Colony (ABC) Algorithm
+5. Whale Optimization Algorithm (WOA)
    - CPP
    - OMP
    - CUDA
    - THRUST
-6. Ant Colony Optimization (ACO)
-   - CPP ✅
-   - OMP ✅
+6. Artificial Bee Colony (ABC) Algorithm
+   - CPP 
+   - OMP 
    - CUDA
    - THRUST
-7. Bacterial Foraging Optimization (BFO) Algorithm
+7. Dragonfly Algorithm (DA)
    - CPP
    - OMP
    - CUDA
    - THRUST
-8. Artificial Fish Swarm Algorithm (AFSA)
+8. Salp Swarm Algorithm (SSA)
    - CPP
    - OMP
    - CUDA
    - THRUST
-9. Krill Herd (KH) Algorithm
+9. Grasshopper Optimization Algorithm (GOA)
     - CPP
     - OMP
     - CUDA
     - THRUST
-10. Shuffled Frog Leaping Algorithm (SFLA)
-    - CPP
-    - OMP
+10. Ant Colony Optimization (ACO)
+    - CPP ✅
+    - OMP ✅
     - CUDA
     - THRUST
 
