@@ -1,5 +1,7 @@
 # Particle Swarm Optimization (PSO) Algorithm
+
 ![Alt Text](https://gitlab.com/aminse/swarm-intelligence/-/blob/main/images/particles.png)
+
 Particle Swarm Optimization (PSO) is a powerful and versatile optimization algorithm inspired by the collective behavior of birds flocking or fish schooling. It harnesses the power of swarm intelligence to solve complex problems efficiently. This README provides an overview of the PSO algorithm, its key concepts, and its applications.
 
 ## Table of Contents
