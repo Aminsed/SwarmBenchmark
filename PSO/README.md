@@ -7,6 +7,10 @@ Particle Swarm Optimization (PSO) is a population-based optimization algorithm i
 
 ![Alt Text](https://upload.wikimedia.org/wikipedia/commons/8/8b/Rastrigin_function.png)
 
+Visualization of PSO:
+
+![Alt Text](https://gitlab.com/aminse/swarm-intelligence/-/raw/main/images/swarm.gif)
+
 ## Mathematical Formula
 The PSO algorithm is based on the following mathematical formula:
 
@@ -14,10 +18,6 @@ The PSO algorithm is based on the following mathematical formula:
 v_i(t+1) = w * v_i(t) + c1 * r1 * (p_best_i - x_i(t)) + c2 * r2 * (g_best - x_i(t))
 x_i(t+1) = x_i(t) + v_i(t+1)
 ```
-
-Visualization of PSO:
-
-![Alt Text](https://gitlab.com/aminse/swarm-intelligence/-/raw/main/images/swarm.gif)
 
 Where:
 - `v_i(t)`: velocity of particle i at iteration t
