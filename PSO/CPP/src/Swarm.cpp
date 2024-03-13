@@ -1,13 +1,15 @@
 #include "Swarm.h"
 #include <iostream>
+#include <random>
 
 Swarm::Swarm(size_t size, double searchSpaceMin, double searchSpaceMax, std::function<double(double, double)> objectiveFunc)
-    : searchSpaceMin(searchSpaceMin), searchSpaceMax(searchSpaceMax), objectiveFunc(objectiveFunc), dis(searchSpaceMin, searchSpaceMax) {
+    : objectiveFunc(objectiveFunc), searchSpaceMin(searchSpaceMin), searchSpaceMax(searchSpaceMax), dis(searchSpaceMin, searchSpaceMax) {
     std::random_device rd;
     gen.seed(rd());
     for (size_t i = 0; i < size; ++i) {
         particles.emplace_back(Particle(randomDouble(), randomDouble()));
     }
+    initialize();
 }
 
 void Swarm::initialize() {
