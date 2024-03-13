@@ -55,9 +55,6 @@ Welcome to the Swarm Intelligence Algorithms Repository! This repository contain
     - CUDA
     - THRUST
 
-Visualization of PSO:
-![Alt Text](https://gitlab.com/aminse/swarm-intelligence/-/raw/main/images/swarm.gif)
-
 
 ## Repository Structure
 
