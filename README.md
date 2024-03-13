@@ -55,6 +55,10 @@ Welcome to the Swarm Intelligence Algorithms Repository! This repository contain
     - CUDA
     - THRUST
 
+Visualization of PSO:
+![Alt Text](https://gitlab.com/aminse/swarm-intelligence/-/raw/main/images/swarm.gif)
+
+
 ## Repository Structure
 
 Each algorithm has its own dedicated folder, named after the algorithm's abbreviation (e.g., PSO, ACO, FA). Within each algorithm folder, you will find four subfolders:
@@ -191,11 +195,3 @@ Contributions to this repository are welcome! If you have an implementation of a
 ## License
 
 This repository is licensed under the [MIT License](LICENSE). Feel free to use the code for educational and research purposes. If you use any of the implementations in your work, please consider citing this repository.
-
-## Acknowledgments
-
-We would like to thank all the contributors who have helped in building and maintaining this repository. Your efforts are greatly appreciated!
-
-If you have any questions or suggestions, please open an issue or contact the repository maintainer.
-
-Happy exploring and optimizing with swarm intelligence algorithms!
