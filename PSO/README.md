@@ -55,7 +55,6 @@ PSO has found widespread applications across various domains, including:
 - **Engineering Optimization**: PSO is used to optimize designs, control systems, and parameters in engineering problems, such as antenna design, power system control, and mechanical component optimization.
 - **Machine Learning and Artificial Intelligence**: PSO is employed in training neural networks, optimizing model hyperparameters, and feature selection, leading to improved accuracy and generalization of machine learning models.
 - **Finance and Economics**: PSO is applied in portfolio optimization, risk management, and financial forecasting, helping to find optimal investment strategies and minimize risks.
-- **Robotics and Swarm Robotics**: PSO is utilized in path planning, obstacle avoidance, and coordination of multi-robot systems, enabling efficient navigation and collaboration among robots.
 - **Image and Video Processing**: PSO is used in image segmentation, object detection, and video compression, assisting in finding optimal parameters and thresholds for enhanced visual data analysis.
 
 ## Conclusion
@@ -63,5 +62,3 @@ PSO has found widespread applications across various domains, including:
 Particle Swarm Optimization is a powerful and versatile optimization algorithm that harnesses the collective intelligence of a swarm to solve complex problems efficiently. Its simplicity, adaptability, and effectiveness make it a valuable tool in various domains.
 
 By understanding the PSO algorithm, its key concepts, and its applications, researchers, engineers, and practitioners can leverage its potential to tackle real-world optimization challenges and push the boundaries of what is possible.
-
-Embrace the power of swarm intelligence with PSO and unlock new possibilities in optimization!
