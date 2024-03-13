@@ -15,6 +15,10 @@ v_i(t+1) = w * v_i(t) + c1 * r1 * (p_best_i - x_i(t)) + c2 * r2 * (g_best - x_i(
 x_i(t+1) = x_i(t) + v_i(t+1)
 ```
 
+Visualization of PSO:
+
+![Alt Text](https://gitlab.com/aminse/swarm-intelligence/-/raw/main/images/swarm.gif)
+
 Where:
 - `v_i(t)`: velocity of particle i at iteration t
 - `x_i(t)`: position of particle i at iteration t
