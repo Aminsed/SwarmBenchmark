@@ -3,7 +3,9 @@
 ![Alt Text](https://gitlab.com/aminse/swarm-intelligence/-/raw/main/images/particles.png)
 
 ## Introduction
-Particle Swarm Optimization (PSO) is a population-based optimization algorithm inspired by the social behavior of bird flocking or fish schooling. It is a metaheuristic algorithm that can be used to solve a wide range of optimization problems. PSO is particularly effective in solving continuous, non-linear, and multi-dimensional optimization problems.
+Particle Swarm Optimization (PSO) is a population-based optimization algorithm inspired by the social behavior of bird flocking or fish schooling. It is a metaheuristic algorithm that can be used to solve a wide range of optimization problems. PSO is particularly effective in solving continuous, non-linear, and multi-dimensional optimization problems. In this repository, the code will attempt to solve the Rastrigin function, a non-convex function used as a performance test problem for optimization algorithms.
+
+![Alt Text](https://upload.wikimedia.org/wikipedia/commons/8/8b/Rastrigin_function.png)
 
 ## Mathematical Formula
 The PSO algorithm is based on the following mathematical formula:
@@ -80,7 +82,7 @@ The PSO algorithm is implemented in this way to efficiently explore the search s
 ## Applications of PSO
 The Particle Swarm Optimization algorithm has been successfully applied to a wide range of optimization problems across various domains. Some prominent examples include:
 
-1. **Function Optimization**: PSO has been used to optimize complex mathematical functions, including multi-modal and high-dimensional functions.
+1. **Function Optimization**: PSO has been used to optimize complex mathematical functions, including multi-modal and high-dimensional functions. Specifically, this repository focuses on solving the Rastrigin function, demonstrating PSO's capability in handling complex, non-linear optimization challenges.
 
 2. **Neural Network Training**: PSO has been employed to optimize the weights and biases of artificial neural networks, improving their training process and generalization performance.
 
