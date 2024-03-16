@@ -1,5 +1,3 @@
-# Makefile for PSO_Project
-
 NVCC = nvcc
 SRC_DIR = src
 INCLUDE_DIR = include
