@@ -2,6 +2,7 @@
 #include "ObjectiveFunction.h"
 #include <iostream>
 #include <cuda_runtime.h>
+#include <chrono>
 
 int main() {
     size_t swarmSize = 100;
@@ -18,8 +19,17 @@ int main() {
     // Initialize the swarm
     swarm.initialize();
 
+    // Start the timer
+    auto start = std::chrono::high_resolution_clock::now();
+
     // Run the PSO algorithm
     swarm.optimize(maxIterations, d_globalBestPosition);
+
+    // Stop the timer
+    auto end = std::chrono::high_resolution_clock::now();
+
+    // Calculate the duration
+    auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
 
     // Copy global best position from device to host
     double globalBestPosition[2];
@@ -28,6 +38,9 @@ int main() {
     // Print the global best position and value
     std::cout << "Global Best Position: (" << globalBestPosition[0] << ", " << globalBestPosition[1] << ")" << std::endl;
     std::cout << "Global Best Value: " << swarm.getGlobalBestValue() << std::endl;
+
+    // Print the execution time
+    std::cout << "Execution Time: " << duration.count() << " milliseconds" << std::endl;
 
     // Free device memory
     cudaFree(d_globalBestPosition);

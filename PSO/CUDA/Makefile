@@ -25,9 +25,10 @@ detect_cuda_arch: detect_cuda_arch.cu
 CUDA_ARCH = $(shell cat cuda_arch.txt 2>/dev/null)
 
 CXXFLAGS = -std=c++17 -Iinclude -arch=$(CUDA_ARCH)
+LDFLAGS = -L/usr/local/cuda/lib64 -lcudart
 
 $(EXECUTABLE): $(OBJECTS) | $(BIN_DIR)
-	$(NVCC) $(CXXFLAGS) -o $@ $^ -lcudart
+	$(NVCC) $(CXXFLAGS) $(LDFLAGS) -o $@ $^
 
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.cu | $(OBJ_DIR)
 	$(NVCC) $(CXXFLAGS) -c $< -o $@
