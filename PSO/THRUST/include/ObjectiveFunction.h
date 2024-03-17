@@ -5,7 +5,7 @@
 
 class ObjectiveFunction {
 public:
-    __host__ __device__ static double rastrigin(double x, double y) {
+    static double rastrigin(double x, double y) {
         return 20 + (x*x - 10*cos(2*M_PI*x)) + (y*y - 10*cos(2*M_PI*y));
     }
 };
