@@ -7,23 +7,23 @@ Welcome to the Swarm Intelligence Algorithms Repository! This repository contain
 1. Particle Swarm Optimization (PSO) ✅
    - CPP ✅
    - OMP ✅
-   - CUDA ✅
    - THRUST ✅
+   - CUDA ✅
 2. Firefly Algorithm (FA)
    - CPP 
    - OMP 
-   - CUDA
    - THRUST
+   - CUDA
 3. Moth-Flame Optimization (MFO) Algorithm
-   - CPP
-   - OMP
-   - CUDA
+   - CPP 
+   - OMP 
    - THRUST
+   - CUDA
 4. Grey Wolf Optimizer (GWO)
-   - CPP
-   - OMP
-   - CUDA
+   - CPP 
+   - OMP 
    - THRUST
+   - CUDA
 5. Whale Optimization Algorithm (WOA)
    - CPP
    - OMP
@@ -32,28 +32,28 @@ Welcome to the Swarm Intelligence Algorithms Repository! This repository contain
 6. Artificial Bee Colony (ABC) Algorithm
    - CPP 
    - OMP 
-   - CUDA
    - THRUST
+   - CUDA
 7. Dragonfly Algorithm (DA)
-   - CPP
-   - OMP
-   - CUDA
+   - CPP 
+   - OMP 
    - THRUST
+   - CUDA
 8. Salp Swarm Algorithm (SSA)
-   - CPP
-   - OMP
-   - CUDA
+   - CPP 
+   - OMP 
    - THRUST
+   - CUDA
 9. Grasshopper Optimization Algorithm (GOA)
-    - CPP
-    - OMP
-    - CUDA
-    - THRUST
+   - CPP 
+   - OMP 
+   - THRUST
+   - CUDA
 10. Ant Colony Optimization (ACO)
-    - CPP ✅
-    - OMP ✅
-    - CUDA
-    - THRUST
+   - CPP ✅
+   - OMP ✅
+   - THRUST
+   - CUDA
 
 
 ## Repository Structure
