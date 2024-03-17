@@ -52,10 +52,8 @@ Welcome to the Swarm Intelligence Algorithms Repository! This repository contain
 10. Ant Colony Optimization (ACO)
    - CPP ✅
    - OMP ✅
-   - THRUST
-   - CUDA
-
-
+   - THRUST 
+   - CUDA 
 
 ## Repository Structure
 
