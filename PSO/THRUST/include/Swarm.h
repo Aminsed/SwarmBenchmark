@@ -5,6 +5,7 @@
 #include <vector>
 #include <random>
 #include <functional>
+#include <thrust/device_vector.h>
 
 class Swarm {
 public:
@@ -14,9 +15,9 @@ public:
     void printGlobalBest() const;
 
 private:
-    std::vector<Particle> particles;
-    std::pair<double, double> globalBestPosition;
-    double globalBestValue = std::numeric_limits<double>::infinity();
+    thrust::device_vector<Particle> particles;
+    thrust::pair<double, double> globalBestPosition;
+    double globalBestValue = thrust::numeric_limits<double>::infinity();
     std::function<double(double, double)> objectiveFunc;
     double searchSpaceMin, searchSpaceMax;
 
