@@ -10,7 +10,7 @@ Welcome to the Swarm Intelligence Algorithms Repository! This repository contain
    - THRUST ✅
    - CUDA ✅
 2. Firefly Algorithm (FA)
-   - CPP 
+   - CPP ✅
    - OMP 
    - THRUST
    - CUDA
