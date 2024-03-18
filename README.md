@@ -61,8 +61,8 @@ Each algorithm has its own dedicated folder, named after the algorithm's abbrevi
 
 - `CPP`: Contains the pure C++ implementation of the algorithm.
 - `OMP`: Contains the OpenMP implementation of the algorithm for parallel processing.
-- `CUDA`: Contains the CUDA implementation of the algorithm for GPU acceleration.
 - `THRUST`: Contains the THRUST implementation of the algorithm for GPU acceleration.
+- `CUDA`: Contains the CUDA implementation of the algorithm for GPU acceleration.
 
 Inside each subfolder, you will find the respective code files and a README file with instructions on how to compile and run the code.
 
