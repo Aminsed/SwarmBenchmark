@@ -11,9 +11,9 @@ Welcome to the Swarm Intelligence Algorithms Repository! This repository contain
    - CUDA ✅
 2. Firefly Algorithm (FA)
    - CPP ✅
-   - OMP
-   - THRUST
-   - CUDA
+   - OMP ✅
+   - THRUST 
+   - CUDA ✅
 3. Moth-Flame Optimization (MFO) Algorithm
    - CPP
    - OMP
