@@ -13,7 +13,7 @@ struct Particle {
 };
 
 __device__ void updateBestFitness(Particle* p, double* globalBestPosition, double* globalBestFitness) {
-    double fitness = objectiveFunction(p->position, DIMENSION);
+    double fitness = objectiveFunction(p->position[0], p->position[1]);
 
     if (fitness < p->bestFitness) {
         p->bestFitness = fitness;
