@@ -1,28 +1,20 @@
-# Makefile for PSO with OpenMP support
-
 CXX = g++
-CXXFLAGS = -std=c++17 -Iinclude -Wall -fopenmp
-SRC_DIR = src
-INCLUDE_DIR = include
-OBJ_DIR = obj
-BIN_DIR = bin
-
-SOURCES = $(wildcard $(SRC_DIR)/*.cpp)
-OBJECTS = $(SOURCES:$(SRC_DIR)/%.cpp=$(OBJ_DIR)/%.o)
-EXECUTABLE = $(BIN_DIR)/pso
-
-all: $(EXECUTABLE)
-
-$(EXECUTABLE): $(OBJECTS) | $(BIN_DIR)
-	$(CXX) $(CXXFLAGS) $^ -o $@
-
-$(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp | $(OBJ_DIR)
-	$(CXX) $(CXXFLAGS) -c $< -o $@
-
-$(BIN_DIR) $(OBJ_DIR):
-	mkdir -p $@
-
-clean:
-	rm -rf $(OBJ_DIR) $(BIN_DIR)
+SOURCES = pso.cpp
+OBJECTS = pso.o
+EXECUTABLE = pso
 
 .PHONY: all clean
+
+all: $(EXECUTABLE)
+	@rm -f $(OBJECTS)
+
+CXXFLAGS = -std=c++17 -O3 -fopenmp
+
+$(EXECUTABLE): $(OBJECTS)
+	$(CXX) $(CXXFLAGS) -o $@ $^
+
+pso.o: pso.cpp
+	$(CXX) $(CXXFLAGS) -c $< -o $@
+
+clean:
+	rm -f $(EXECUTABLE) $(OBJECTS)
