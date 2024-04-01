@@ -1,6 +1,6 @@
 # Moth-flame Optimization Algorithm
 
-![Alt Text](https://example.com/moth_flame_image.png)
+![Alt Text](https://gitlab.com/aminse/swarm-intelligence/-/raw/main/images/mfo.png)
 
 ## Introduction
 
