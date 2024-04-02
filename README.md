@@ -19,7 +19,7 @@ Welcome to the Swarm Intelligence Algorithms Repository! This repository contain
    - OMP ✅
      - Execution Time: 35565.00 ms
    - THRUST ✅
-     - Execution Time: 3707.00 ms
+     - Execution Time: 43861.00 ms
    - CUDA ✅
      - Execution Time: 43846.00 ms
 3. Moth-Flame Optimization (MFO) Algorithm
