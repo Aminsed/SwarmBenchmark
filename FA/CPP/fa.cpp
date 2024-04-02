@@ -39,10 +39,8 @@ void updateFireflies(std::vector<Firefly>& fireflies, std::vector<double>& globa
     std::random_device rd;
     std::mt19937 gen(rd());
     std::uniform_real_distribution<double> dis(0.0, 1.0);
-
     for (int i = 0; i < NUM_FIREFLIES; i++) {
         auto& firefly = fireflies[i];
-
         for (int j = 0; j < NUM_FIREFLIES; j++) {
             if (i != j) {
                 const auto& otherFirefly = fireflies[j];
@@ -52,9 +50,8 @@ void updateFireflies(std::vector<Firefly>& fireflies, std::vector<double>& globa
                     distance += diff * diff;
                 }
                 distance = sqrt(distance);
-
+                double beta = attractiveness(distance);
                 if (otherFirefly.brightness > firefly.brightness) {
-                    double beta = attractiveness(distance);
                     for (int k = 0; k < DIMENSIONS; k++) {
                         double r = dis(gen);
                         firefly.position[k] += beta * (otherFirefly.position[k] - firefly.position[k]) + ALPHA * (r - 0.5);
@@ -62,9 +59,7 @@ void updateFireflies(std::vector<Firefly>& fireflies, std::vector<double>& globa
                 }
             }
         }
-
         firefly.brightness = objectiveFunction(firefly.position);
-
         if (firefly.brightness < globalBestFitness) {
             globalBestFitness = firefly.brightness;
             globalBestPosition = firefly.position;

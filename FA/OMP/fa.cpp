@@ -23,10 +23,10 @@ void initializeFireflies(std::vector<Firefly>& fireflies, std::vector<double>& g
     std::uniform_real_distribution<double> dis(-5.0, 5.0);
 
     #pragma omp parallel for
-    for (int i = 0; i < NUM_FIREFLIES; ++i) {
+    for (int i = 0; i < NUM_FIREFLIES; i++) {
         auto& firefly = fireflies[i];
         firefly.position.resize(DIMENSIONS);
-        for (int j = 0; j < DIMENSIONS; ++j) {
+        for (int j = 0; j < DIMENSIONS; j++) {
             firefly.position[j] = dis(gen);
         }
         firefly.brightness = objectiveFunction(firefly.position);
@@ -47,29 +47,26 @@ void updateFireflies(std::vector<Firefly>& fireflies, std::vector<double>& globa
     std::uniform_real_distribution<double> dis(0.0, 1.0);
 
     #pragma omp parallel for
-    for (int i = 0; i < NUM_FIREFLIES; ++i) {
+    for (int i = 0; i < NUM_FIREFLIES; i++) {
         auto& firefly = fireflies[i];
-
-        for (int j = 0; j < NUM_FIREFLIES; ++j) {
+        for (int j = 0; j < NUM_FIREFLIES; j++) {
             if (i != j) {
                 const auto& otherFirefly = fireflies[j];
                 double distance = 0.0;
-                for (int k = 0; k < DIMENSIONS; ++k) {
+                for (int k = 0; k < DIMENSIONS; k++) {
                     double diff = firefly.position[k] - otherFirefly.position[k];
                     distance += diff * diff;
                 }
                 distance = sqrt(distance);
-
+                double beta = attractiveness(distance);
                 if (otherFirefly.brightness > firefly.brightness) {
-                    double beta = attractiveness(distance);
-                    for (int k = 0; k < DIMENSIONS; ++k) {
+                    for (int k = 0; k < DIMENSIONS; k++) {
                         double r = dis(gen);
                         firefly.position[k] += beta * (otherFirefly.position[k] - firefly.position[k]) + ALPHA * (r - 0.5);
                     }
                 }
             }
         }
-
         firefly.brightness = objectiveFunction(firefly.position);
 
         #pragma omp critical
@@ -83,7 +80,7 @@ void updateFireflies(std::vector<Firefly>& fireflies, std::vector<double>& globa
 }
 
 void runFA(std::vector<Firefly>& fireflies, std::vector<double>& globalBestPosition, double& globalBestFitness) {
-    for (int iter = 0; iter < MAX_ITERATIONS; ++iter) {
+    for (int iter = 0; iter < MAX_ITERATIONS; iter++) {
         updateFireflies(fireflies, globalBestPosition, globalBestFitness);
     }
 }
@@ -94,7 +91,7 @@ void printResults(const std::vector<double>& globalBestPosition, double globalBe
         std::cout << "Global Best Position: " << globalBestPosition[0] << std::endl;
     } else {
         std::cout << "Global Best Position: (";
-        for (int i = 0; i < DIMENSIONS; ++i) {
+        for (int i = 0; i < DIMENSIONS; i++) {
             std::cout << globalBestPosition[i];
             if (i < DIMENSIONS - 1) {
                 std::cout << ", ";
@@ -113,13 +110,11 @@ int main() {
     double globalBestFitness = std::numeric_limits<double>::infinity();
 
     auto start = std::chrono::high_resolution_clock::now();
-
     initializeFireflies(fireflies, globalBestPosition, globalBestFitness);
     runFA(fireflies, globalBestPosition, globalBestFitness);
-
     auto end = std::chrono::high_resolution_clock::now();
-    double executionTime = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
 
+    double executionTime = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
     printResults(globalBestPosition, globalBestFitness, executionTime);
 
     return 0;
