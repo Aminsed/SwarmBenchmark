@@ -15,13 +15,13 @@ Welcome to the Swarm Intelligence Algorithms Repository! This repository contain
      - Execution Time: 11.00 ms
 2. Firefly Algorithm (FA) ✅
    - CPP ✅
-     - Execution Time: 15501.00 ms
+     - Execution Time: 26885.00 ms
    - OMP ✅
-     - Execution Time: 27631.00 ms
+     - Execution Time: 35565.00 ms
    - THRUST ✅
-     - Execution Time: 3707.00 ms
+     - Execution Time: 43861.00 ms
    - CUDA ✅
-     - Execution Time: 3691.00 ms
+     - Execution Time: 43846.00 ms
 3. Moth-Flame Optimization (MFO) Algorithm
    - CPP
    - OMP
