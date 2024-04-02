@@ -22,11 +22,11 @@ Welcome to the Swarm Intelligence Algorithms Repository! This repository contain
      - Execution Time: 43861.00 ms
    - CUDA ✅
      - Execution Time: 43846.00 ms
-3. Moth-Flame Optimization (MFO) Algorithm
-   - CPP
-   - OMP
-   - THRUST
-   - CUDA
+3. Moth-Flame Optimization (MFO) Algorithm ✅
+   - CPP ✅
+   - OMP ✅
+   - THRUST ✅
+   - CUDA ✅
 4. Grey Wolf Optimizer (GWO)
    - CPP
    - OMP
