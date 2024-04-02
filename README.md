@@ -76,7 +76,7 @@ Inside each subfolder, you will find the respective code files and a README file
 
 ## Getting Started
 
-To compile and run CPP and OMP codes, make sure to have GCC installed. For CUDA and THRUST codes, make sure to have NVCC installed. Additionally, ensure CMake is installed for all. Simply navigate to the desired algorithm's folder and run `make`. You can find the executable in the `bin` folder. After you're done, you can run `make clean` to remove generated files.
+To compile and run CPP and OMP codes, make sure to have GCC installed. For CUDA and THRUST codes, make sure to have NVCC installed. Additionally, ensure CMake is installed for all. Simply navigate to the desired algorithm's folder and run `make` to generate the executable file. After you're done running the executable, you can run `make clean` to remove all of the generated files.
 
 ## Contributing
 
