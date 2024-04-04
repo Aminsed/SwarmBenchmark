@@ -27,11 +27,11 @@ Welcome to the Swarm Intelligence Algorithms Repository! This repository contain
    - OMP ✅
    - THRUST ✅
    - CUDA ✅
-4. Grey Wolf Optimizer (GWO)
-   - CPP
-   - OMP
-   - THRUST
-   - CUDA
+4. Grey Wolf Optimizer (GWO) ✅
+   - CPP ✅
+   - OMP ✅
+   - THRUST ✅
+   - CUDA ✅
 5. Whale Optimization Algorithm (WOA)
    - CPP
    - OMP
