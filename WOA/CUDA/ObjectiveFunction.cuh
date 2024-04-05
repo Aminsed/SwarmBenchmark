@@ -5,11 +5,8 @@
 #include <cmath>
 
 #define BLOCK_SIZE 256
-#define NUM_PARTICLES 1024
+#define NUM_WHALES 1024
 #define MAX_ITERATIONS 1000
-#define COGNITIVE_WEIGHT 1.49 // Cognitive weight (c1) in the velocity update equation
-#define SOCIAL_WEIGHT 1.49 // Social weight (c2) in the velocity update equation
-#define INERTIA_WEIGHT 0.729 // Inertia weight (w) in the velocity update equation
 
 /*
 // Rosenbrock function
