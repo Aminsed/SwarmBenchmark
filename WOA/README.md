@@ -1,5 +1,7 @@
 # Whale Optimization Algorithm
 
+![Alt Text](https://gitlab.com/aminse/swarm-intelligence/-/raw/main/images/whale.png)
+
 ## Introduction
 
 Whale Optimization Algorithm (WOA) is a nature-inspired optimization algorithm that mimics the hunting behavior of humpback whales. The algorithm simulates the bubble-net feeding strategy employed by humpback whales to catch prey. In WOA, the whales search for the optimal solution by iteratively updating their positions based on the best solution found so far.
