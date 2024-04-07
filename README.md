@@ -32,16 +32,16 @@ Welcome to the Swarm Intelligence Algorithms Repository! This repository contain
    - OMP ✅
    - THRUST ✅
    - CUDA ✅
-5. Whale Optimization Algorithm (WOA)
-   - CPP
-   - OMP
+5. Whale Optimization Algorithm (WOA) ✅
+   - CPP ✅
+   - OMP ✅
    - CUDA ✅
    - THRUST ✅
-6. Artificial Bee Colony (ABC) Algorithm
-   - CPP
-   - OMP
-   - THRUST
-   - CUDA
+6. Artificial Bee Colony (ABC) Algorithm ✅
+   - CPP ✅
+   - OMP ✅
+   - THRUST ✅
+   - CUDA ✅
 7. Dragonfly Algorithm (DA)
    - CPP
    - OMP
