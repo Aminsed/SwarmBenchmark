@@ -8,7 +8,7 @@ EXECUTABLE = abc
 all: $(EXECUTABLE)
 	@rm -f $(OBJECTS)
 
-CXXFLAGS = -std=c++17 -O3
+CXXFLAGS = -std=c++17 -O3 -fopenmp
 
 $(EXECUTABLE): $(OBJECTS)
 	$(CXX) $(CXXFLAGS) -o $@ $^
