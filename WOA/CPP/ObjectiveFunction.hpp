@@ -1,29 +1,23 @@
 #ifndef OBJECTIVE_FUNCTION_H
 #define OBJECTIVE_FUNCTION_H
 
-#include <cuda_runtime.h>
 #include <cmath>
 
-#define BLOCK_SIZE 256
 #define NUM_WHALES 1024
 #define MAX_ITERATIONS 1000
 
 /*
 // Rosenbrock function
 #define DIMENSIONS 1 // Number of dimensions in the optimization problem
-
-__device__ double objectiveFunction(double* position) {
+double objectiveFunction(double* position) {
     double x = position[0];
     return 100.0 * (x * x - x) * (x * x - x) + (1.0 - x) * (1.0 - x);
 }
 */
 
-
-
 // Rastrigin function
 #define DIMENSIONS 2 // Number of dimensions in the optimization problem
-
-__device__ double objectiveFunction(double* position) {
+double objectiveFunction(double* position) {
     double sum = 0.0;
     for (int i = 0; i < DIMENSIONS; i++) {
         double xi = position[i];
@@ -32,12 +26,10 @@ __device__ double objectiveFunction(double* position) {
     return 20.0 + sum;
 }
 
-
 /*
 // Griewank function
 #define DIMENSIONS 3 // Number of dimensions in the optimization problem
-
-__device__ double objectiveFunction(double* position) {
+double objectiveFunction(double* position) {
     double x = position[0];
     double y = position[1];
     double z = position[2];
@@ -48,8 +40,7 @@ __device__ double objectiveFunction(double* position) {
 /*
 // Schaffer function N.4
 #define DIMENSIONS 4 // Number of dimensions in the optimization problem
-
-__device__ double objectiveFunction(double* position) {
+double objectiveFunction(double* position) {
     double x = position[0];
     double y = position[1];
     double numerator = pow(cos(sin(fabs(x * x - y * y))), 2) - 0.5;
