@@ -42,11 +42,11 @@ Welcome to the Swarm Intelligence Algorithms Repository! This repository contain
    - OMP ✅
    - THRUST ✅
    - CUDA ✅
-7. Dragonfly Algorithm (DA)
-   - CPP
-   - OMP
-   - THRUST
-   - CUDA
+7. Dragonfly Algorithm (DA) ✅
+   - CPP ✅
+   - OMP ✅
+   - THRUST ✅
+   - CUDA ✅
 8. Salp Swarm Algorithm (SSA)
    - CPP
    - OMP
