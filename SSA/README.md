@@ -13,16 +13,14 @@ The Salp Swarm Algorithm is based on the following mathematical formulas:
 ### Position update for the leader salp
 
 ```plaintext
-x_1^j = 
-  | F_j + c_1 * ((ub_j - lb_j) * c_2 + lb_j),   c_3 >= 0.5
-  | F_j - c_1 * ((ub_j - lb_j) * c_2 + lb_j),   c_3 < 0.5
+x_1^j = | F_j + c_1 * ((ub_j - lb_j) * c_2 + lb_j), c_3 >= 0.5 |
+        | F_j - c_1 * ((ub_j - lb_j) * c_2 + lb_j), c_3 < 0.5
 ```
 
 ### Position update for the follower salps
 
 ```plaintext
-x_i^j = 
-  | (x_i^j + x_{i-1}^j) / 2,   i >= 2
+x_i^j = | (x_i^j + x_{i-1}^j) / 2, i >= 2
 ```
 
 Where:
@@ -34,11 +32,7 @@ Where:
 
 ## Explanation of the Formula
 
-The Salp Swarm Algorithm divides the population into two groups: the leader and the followers. The leader salp guides the swarm towards the food source (optimal solution), while the followers follow the leader's path.
-
-The position of the leader salp is updated using the first formula, which balances exploration and exploitation. If `c_3` is greater than or equal to 0.5, the leader salp moves towards the food source; otherwise, it moves away from the food source. The step size is controlled by the parameter `c_1`.
-
-The positions of the follower salps are updated using the second formula, which calculates the average position of the current salp and the salp in front of it. This allows the followers to follow the path of the leader while maintaining the chain structure.
+The Salp Swarm Algorithm divides the population into two groups: the leader and the followers. The leader salp guides the swarm towards the food source (optimal solution), while the followers follow the leader's path. The position of the leader salp is updated using the first formula, which balances exploration and exploitation. If `c_3` is greater than or equal to 0.5, the leader salp moves towards the food source; otherwise, it moves away from the food source. The step size is controlled by the parameter `c_1`. The positions of the follower salps are updated using the second formula, which calculates the average position of the current salp and the salp in front of it. This allows the followers to follow the path of the leader while maintaining the chain structure. It's important to note that the boundaries of the search space (`ub_j` and `lb_j`) should be known for SSA to effectively explore and exploit the search space within the defined limits.
 
 ## Pseudo Code
 
@@ -68,7 +62,6 @@ while termination condition is not met:
 ## Applications of Salp Swarm Algorithm
 
 The Salp Swarm Algorithm has been applied to various optimization problems, including:
-
 - Function Optimization
 - Feature Selection
 - Image Processing
@@ -78,7 +71,6 @@ The Salp Swarm Algorithm has been applied to various optimization problems, incl
 ## Comparison with Other Algorithms
 
 Compared to other swarm intelligence algorithms like Particle Swarm Optimization (PSO) and Artificial Bee Colony (ABC), the Salp Swarm Algorithm has some unique characteristics:
-
 - **Chain Structure**: SSA simulates the chain-like structure of salps, which allows for efficient exploration of the search space.
 - **Leader-Follower Mechanism**: The leader salp guides the swarm towards the optimal solution, while the followers follow the leader's path, maintaining the chain structure.
 - **Adaptability**: SSA can adapt to different optimization problems by adjusting the balance between exploration and exploitation through the position update formulas.
