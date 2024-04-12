@@ -52,11 +52,11 @@ Welcome to the Swarm Intelligence Algorithms Repository! This repository contain
    - OMP ✅
    - THRUST ✅
    - CUDA ✅
-9. Grasshopper Optimization Algorithm (GOA)
-   - CPP
-   - OMP
-   - THRUST
-   - CUDA
+9. Grasshopper Optimization Algorithm (GOA) ✅
+   - CPP ✅
+   - OMP ✅
+   - THRUST ✅
+   - CUDA ✅
 10. Ant Colony Optimization (ACO)
     - CPP ✅
     - OMP ✅
