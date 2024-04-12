@@ -50,8 +50,8 @@ Welcome to the Swarm Intelligence Algorithms Repository! This repository contain
 8. Salp Swarm Algorithm (SSA)
    - CPP
    - OMP
-   - THRUST
-   - CUDA
+   - THRUST ✅
+   - CUDA ✅
 9. Grasshopper Optimization Algorithm (GOA)
    - CPP
    - OMP
