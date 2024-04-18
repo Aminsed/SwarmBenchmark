@@ -6,41 +6,79 @@ Welcome to the Swarm Intelligence Algorithms Repository! This repository contain
 
 1. Particle Swarm Optimization (PSO) ✅
    - CPP ✅  
-     - Execution Time: 80.00 ms
+     - Execution Time: 69.00 ms
+     - Result: 0
    - OMP ✅  
-     - Execution Time: 3560.00 ms
+     - Execution Time: 2476.00 ms
+     - Result: 0
    - THRUST ✅  
      - Execution Time: 11.00 ms
+     - Result: 0
    - CUDA ✅  
      - Execution Time: 11.00 ms
+     - Result: 0
 2. Firefly Algorithm (FA) ✅
    - CPP ✅
-     - Execution Time: 26885.00 ms
+     - Execution Time: 16882.00 ms
+     - Result: 1.1178274619
    - OMP ✅
-     - Execution Time: 35565.00 ms
+     - Execution Time: 17627.00 ms
+     - Result: 1.0961358033
    - THRUST ✅
-     - Execution Time: 43861.00 ms
+     - Execution Time: 3656.00 ms
+     - Result: 1.0304694993
    - CUDA ✅
-     - Execution Time: 43846.00 ms
+     - Execution Time: 3659.00 ms
+     - Result: 0.5231345270
 3. Moth-Flame Optimization (MFO) Algorithm ✅
    - CPP ✅
+     - Execution Time: 2620.00 ms
+     - Result: 30.8220546814
    - OMP ✅
+     - Execution Time: 2666.00 ms
+     - Result: 17.1520949785
    - THRUST ✅
+     - Execution Time: 31.00 ms
+     - Result: 0
    - CUDA ✅
+     - Execution Time: 34.00 ms
+     - Result: 0
 4. Grey Wolf Optimizer (GWO) ✅
    - CPP ✅
+     - Execution Time: 145.00 ms
+     - Result: 0
    - OMP ✅
+     - Execution Time: 244.00 ms
+     - Result: 0
    - THRUST ✅
+     - Execution Time: 28.00 ms
+     - Result: 0
    - CUDA ✅
+     - Execution Time: 17.00 ms
+     - Result: 0
 5. Whale Optimization Algorithm (WOA) ✅
    - CPP ✅
+     - Execution Time: 92.00 ms
+     - Result: 0
    - OMP ✅
-   - CUDA ✅
+     - Execution Time: 235.00 ms
+     - Result: 0
    - THRUST ✅
+     - Execution Time: 17.00 ms
+     - Result: 0
+   - CUDA ✅
+     - Execution Time: 17.00 ms
+     - Result: 0
 6. Artificial Bee Colony (ABC) Algorithm ✅
    - CPP ✅
+     - Execution Time: 1871.00 ms
+     - Result: 0
    - OMP ✅
+     - Execution Time: 413.00
+     - Result: 0
    - THRUST ✅
+     - Execution Time: 
+     - Result: 
    - CUDA ✅
 7. Dragonfly Algorithm (DA) ✅
    - CPP ✅
