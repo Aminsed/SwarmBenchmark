@@ -18,7 +18,6 @@ return 100.0 * (x * x - x) * (x * x - x) + (1.0 - x) * (1.0 - x);
 }
 */
 
-/*
 // Rastrigin function
 #define DIMENSIONS 2 // Number of dimensions in the optimization problem
 __device__ double objectiveFunction(double* position) {
@@ -29,7 +28,6 @@ sum += (xi * xi - 10.0 * cos(2.0 * M_PI * xi));
 }
 return 20.0 + sum;
 }
-*/
 
 /*
 // Griewank function
@@ -53,6 +51,5 @@ double denominator = pow(1.0 + 0.001 * (x * x + y * y), 2);
 return 0.5 + numerator / denominator;
 }
 */
-
 
 #endif
