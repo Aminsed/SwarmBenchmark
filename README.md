@@ -149,7 +149,7 @@ To compile and run CPP and OMP codes, make sure to have GCC installed. For CUDA 
 
 The benchmarking results presented in this repository were obtained under controlled conditions to ensure comparability across different implementations. Below are the details of the testing environment and parameters:
 
-- **Function Used for Testing**: Rastrigin Function
+- **Function Used for Testing**: Rastrigin Function. Lower `Execution Time` and `Result` means better performance.
 - **Parameters**: All algorithms were tested using identical parameters to ensure fair comparison.
 - **Hardware Specifications**:
   - **CPU**: Intel i9-12900K
