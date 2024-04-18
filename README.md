@@ -74,33 +74,62 @@ Welcome to the Swarm Intelligence Algorithms Repository! This repository contain
      - Execution Time: 1871.00 ms
      - Result: 0
    - OMP ✅
-     - Execution Time: 413.00
+     - Execution Time: 413.00 ms
      - Result: 0
    - THRUST ✅
-     - Execution Time: 
-     - Result: 
+     - Execution Time: 1394.00 ms
+     - Result: 0
    - CUDA ✅
+     - Execution Time: 1410.00 ms
+     - Result: 0
 7. Dragonfly Algorithm (DA) ✅
    - CPP ✅
+     - Execution Time: 125.00 ms
+     - Result: 2.0665598224
    - OMP ✅
+     - Execution Time: 116.00 ms
+     - Result: 1.8372467783
    - THRUST ✅
+     - Execution Time: 13.00 ms
+     - Result: 0.0089122206
    - CUDA ✅
+     - Execution Time: 14.00 ms
+     - Result: 1.4157596691
 8. Salp Swarm Algorithm (SSA) ✅
    - CPP ✅
+     - Execution Time: 50.00 ms
+     - Result: 0.0019778109
    - OMP ✅
+     - Execution Time: 2124.00 ms
+     - Result: 0.0000558706
    - THRUST ✅
+     - Execution Time: 13.00 ms
+     - Result: 0.0168243996
    - CUDA ✅
+     - Execution Time: 14.00 ms
+     - Result: 1.0017446653
 9. Grasshopper Optimization Algorithm (GOA) ✅
    - CPP ✅
+     - Execution Time: 17589.00 ms
+     - Result: 0.0583486423
    - OMP ✅
+     - Execution Time: 21697.00 ms
+     - Result: 0.0037905337
    - THRUST ✅
+     - Execution Time: 970.00 ms
+     - Result: 0.0018583121
    - CUDA ✅
+     - Execution Time: 979.00 ms
+     - Result: 0.0628388407
 10. Ant Colony Optimization (ACO)
-    - CPP ✅
-    - OMP ✅
-    - THRUST
-    - CUDA
-
+    - CPP 
+    - OMP 
+   - THRUST ✅
+     - Execution Time: 10.00
+     - Result: 0
+   - CUDA ✅
+     - Execution Time: 11.00 ms
+     - Result: 0
 ## Repository Structure
 
 Each algorithm has its own dedicated folder, named after the algorithm's abbreviation (e.g., PSO, ACO, FA). Within each algorithm folder, you will find four subfolders:
@@ -115,6 +144,18 @@ Inside each subfolder, you will find the respective code files and a README file
 ## Getting Started
 
 To compile and run CPP and OMP codes, make sure to have GCC installed. For CUDA and THRUST codes, make sure to have NVCC installed. Additionally, ensure CMake is installed for all. Simply navigate to the desired algorithm's folder and run `make` to generate the executable file. After you're done running the executable, you can run `make clean` to remove all of the generated files.
+
+## Benchmarking Details
+
+The benchmarking results presented in this repository were obtained under controlled conditions to ensure comparability across different implementations. Below are the details of the testing environment and parameters:
+
+- **Function Used for Testing**: Rastrigin Function
+- **Parameters**: All algorithms were tested using identical parameters to ensure fair comparison.
+- **Hardware Specifications**:
+  - **CPU**: Intel i9-12900K
+  - **GPU**: NVIDIA RTX A6000 (Ampere Architecture)
+
+These specifications were maintained consistently to evaluate the performance of each algorithm implementation accurately.
 
 ## Contributing
 
