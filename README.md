@@ -84,18 +84,32 @@ Welcome to the Swarm Intelligence Algorithms Repository! This repository contain
      - Execution Time: 17.00 ms
      - Result: 0
 6. Artificial Bee Colony (ABC) Algorithm ✅
-   - CPP ✅
-     - Execution Time: 1871.00 ms
-     - Result: 0
-   - OMP ✅
-     - Execution Time: 413.00 ms
-     - Result: 0
-   - THRUST ✅
-     - Execution Time: 1394.00 ms
-     - Result: 0
-   - CUDA ✅
-     - Execution Time: 1410.00 ms
-     - Result: 0
+   - TSP:
+     - CPP 
+       - Execution Time: 
+       - Result: 
+     - OMP 
+       - Execution Time: 
+       - Result: 
+     - THRUST 
+       - Execution 
+       - Result: 
+     - CUDA 
+       - Execution Time: 
+       - Result: 
+   - None-TSP: ✅
+     - CPP ✅  
+       - Execution Time:
+       - Result: 
+     - OMP ✅  
+       - Execution Time:
+       - Result: 
+     - THRUST ✅  
+       - Execution Time:
+       - Result: 
+     - CUDA ✅  
+       - Execution Time:
+       - Result: 
 7. Dragonfly Algorithm (DA) ✅
    - CPP ✅
      - Execution Time: 125.00 ms
@@ -150,18 +164,18 @@ Welcome to the Swarm Intelligence Algorithms Repository! This repository contain
        - Execution Time: 
        - Result: 
    - None-TSP: ✅
-     - CPP ✅
+     - CPP ✅  
        - Execution Time:
-       - Result:
-     - OMP ✅
+       - Result: 
+     - OMP ✅  
        - Execution Time:
-       - Result:
-     - THRUST ✅
-       - Execution Time: 10.00 ms
-       - Result: 0
-     - CUDA ✅
-       - Execution Time: 11.00 ms
-       - Result: 0
+       - Result: 
+     - THRUST ✅  
+       - Execution Time:
+       - Result: 
+     - CUDA ✅  
+       - Execution Time:
+       - Result: 
 
 ## Repository Structure
 
