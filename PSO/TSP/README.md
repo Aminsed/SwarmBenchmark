@@ -6,11 +6,8 @@
 
 Particle Swarm Optimization (PSO) is a population-based optimization algorithm inspired by the social behavior of bird flocking or fish schooling. It is a metaheuristic that is particularly effective in solving continuous, non-linear, and multi-dimensional optimization problems. This repository contains code that applies PSO to solve the Travelling Salesman Problem, a well-known problem in computer science and operations research.
 
-![Rastrigin Function](https://upload.wikimedia.org/wikipedia/commons/8/8b/Rastrigin_function.png)
+![TSP](https://i.makeagif.com/media/11-06-2017/6Te1F7.gif)
 
-Visualization of PSO:
-
-![PSO Visualization](https://gitlab.com/aminse/swarm-intelligence/-/raw/main/images/swarm.gif)
 
 ## Mathematical Formula
 
