@@ -19,18 +19,18 @@ Welcome to the Swarm Intelligence Algorithms Repository! This repository contain
        - Execution Time: 
        - Result: 
    - None-TSP: ✅
-    - CPP ✅  
-      - Execution Time: 69.00 ms
-      - Result: 0
-    - OMP ✅  
-      - Execution Time: 2476.00 ms
-      - Result: 0
-    - THRUST ✅  
-      - Execution Time: 11.00 ms
-      - Result: 0
-    - CUDA ✅  
-      - Execution Time: 11.00 ms
-      - Result: 0
+     - CPP ✅  
+       - Execution Time: 69.00 ms
+       - Result: 0
+     - OMP ✅  
+       - Execution Time: 2476.00 ms
+       - Result: 0
+     - THRUST ✅  
+       - Execution Time: 11.00 ms
+       - Result: 0
+     - CUDA ✅  
+       - Execution Time: 11.00 ms
+       - Result: 0
 2. Firefly Algorithm (FA) ✅
    - CPP ✅
      - Execution Time: 16882.00 ms
