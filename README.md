@@ -165,17 +165,17 @@ Welcome to the Swarm Intelligence Algorithms Repository! This repository contain
         - Result:
     - None-TSP: ✅
       - CPP ✅
-        - Execution Time: 69.00 ms
-        - Result: 0
+        - Execution Time:
+        - Result:
       - OMP ✅
-        - Execution Time: 2476.00 ms
-        - Result: 0
+        - Execution Time:
+        - Result:
       - THRUST ✅
-        - Execution Time: 11.00 ms
-        - Result: 0
+        - Execution Time:
+        - Result:
       - CUDA ✅
-        - Execution Time: 11.00 ms
-        - Result: 0
+        - Execution Time:
+        - Result:
 
 ## Repository Structure
 
