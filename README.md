@@ -122,7 +122,7 @@ Welcome to the Swarm Intelligence Algorithms Repository! This repository contain
      - Execution Time: 979.00 ms
      - Result: 0.0628388407
 10. Ant Colony Optimization (ACO) 
-   - TSP:
+  - TSP:
      - CPP 
       - Execution Time:
       - Result:
@@ -135,20 +135,20 @@ Welcome to the Swarm Intelligence Algorithms Repository! This repository contain
      - CUDA 
       - Execution Time:
       - Result:
-   - None-TSP:
+  - None-TSP:
      - CPP 
       - Execution Time:
       - Result:
      - OMP 
       - Execution Time:
       - Result:
-     - THRUST 
+     - THRUST ✅
       - Execution Time: 10.00
       - Result: 0
      - CUDA ✅
       - Execution Time: 11.00 ms
       - Result: 0
-      
+
 ## Repository Structure
 
 Each algorithm has its own dedicated folder, named after the algorithm's abbreviation (e.g., PSO, ACO, FA). Within each algorithm folder, you will find four subfolders:
