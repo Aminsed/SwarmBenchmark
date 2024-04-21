@@ -6,29 +6,29 @@ Welcome to the Swarm Intelligence Algorithms Repository! This repository contain
 
 1. Particle Swarm Optimization (PSO) ✅
    - TSP:
-     - CPP 
-       - Execution Time: 
-       - Result: 
-     - OMP 
-       - Execution Time: 
-       - Result: 
-     - THRUST 
-       - Execution 
-       - Result: 
-     - CUDA 
-       - Execution Time: 
-       - Result: 
+     - CPP
+       - Execution Time:
+       - Result:
+     - OMP
+       - Execution Time:
+       - Result:
+     - THRUST
+       - Execution
+       - Result:
+     - CUDA
+       - Execution Time:
+       - Result:
    - None-TSP: ✅
-     - CPP ✅  
+     - CPP ✅
        - Execution Time: 69.00 ms
        - Result: 0
-     - OMP ✅  
+     - OMP ✅
        - Execution Time: 2476.00 ms
        - Result: 0
-     - THRUST ✅  
+     - THRUST ✅
        - Execution Time: 11.00 ms
        - Result: 0
-     - CUDA ✅  
+     - CUDA ✅
        - Execution Time: 11.00 ms
        - Result: 0
 2. Firefly Algorithm (FA) ✅
@@ -85,31 +85,31 @@ Welcome to the Swarm Intelligence Algorithms Repository! This repository contain
      - Result: 0
 6. Artificial Bee Colony (ABC) Algorithm ✅
    - TSP:
-     - CPP 
-       - Execution Time: 
-       - Result: 
-     - OMP 
-       - Execution Time: 
-       - Result: 
-     - THRUST 
-       - Execution 
-       - Result: 
-     - CUDA 
-       - Execution Time: 
-       - Result: 
+     - CPP
+       - Execution Time:
+       - Result:
+     - OMP
+       - Execution Time:
+       - Result:
+     - THRUST
+       - Execution
+       - Result:
+     - CUDA
+       - Execution Time:
+       - Result:
    - None-TSP: ✅
-     - CPP ✅  
+     - CPP ✅
        - Execution Time:
-       - Result: 
-     - OMP ✅  
+       - Result:
+     - OMP ✅
        - Execution Time:
-       - Result: 
-     - THRUST ✅  
+       - Result:
+     - THRUST ✅
        - Execution Time:
-       - Result: 
-     - CUDA ✅  
+       - Result:
+     - CUDA ✅
        - Execution Time:
-       - Result: 
+       - Result:
 7. Dragonfly Algorithm (DA) ✅
    - CPP ✅
      - Execution Time: 125.00 ms
@@ -150,32 +150,32 @@ Welcome to the Swarm Intelligence Algorithms Repository! This repository contain
      - Execution Time: 979.00 ms
      - Result: 0.0628388407
 10. Ant Colony Optimization (ACO) ✅
-  - TSP:
-     - CPP 
-       - Execution Time: 
-       - Result: 
-     - OMP 
-       - Execution Time: 
-       - Result: 
-     - THRUST 
-       - Execution 
-       - Result: 
-     - CUDA 
-       - Execution Time: 
-       - Result: 
-   - None-TSP: ✅
-     - CPP ✅  
-       - Execution Time: 69.00 ms
-       - Result: 0
-     - OMP ✅  
-       - Execution Time: 2476.00 ms
-       - Result: 0
-     - THRUST ✅  
-       - Execution Time: 11.00 ms
-       - Result: 0
-     - CUDA ✅  
-       - Execution Time: 11.00 ms
-       - Result: 0
+    - TSP:
+      - CPP
+        - Execution Time:
+        - Result:
+      - OMP
+        - Execution Time:
+        - Result:
+      - THRUST
+        - Execution
+        - Result:
+      - CUDA
+        - Execution Time:
+        - Result:
+    - None-TSP: ✅
+      - CPP ✅
+        - Execution Time: 69.00 ms
+        - Result: 0
+      - OMP ✅
+        - Execution Time: 2476.00 ms
+        - Result: 0
+      - THRUST ✅
+        - Execution Time: 11.00 ms
+        - Result: 0
+      - CUDA ✅
+        - Execution Time: 11.00 ms
+        - Result: 0
 
 ## Repository Structure
 
