@@ -121,33 +121,33 @@ Welcome to the Swarm Intelligence Algorithms Repository! This repository contain
    - CUDA ✅
      - Execution Time: 979.00 ms
      - Result: 0.0628388407
-10. Ant Colony Optimization (ACO)
+10. Ant Colony Optimization (ACO) 
    - TSP:
      - CPP 
-      - Execution Time:
-      - Result:
+       - Execution Time: 
+       - Result: 
      - OMP 
-      - Execution Time:
-      - Result:
+       - Execution Time: 
+       - Result: 
      - THRUST 
-      - Execution Time:
-      - Result:
+       - Execution 
+       - Result: 
      - CUDA 
-      - Execution Time:
-      - Result:
-   - None-TSP:
-     - CPP 
-      - Execution Time:
-      - Result:
-     - OMP 
-      - Execution Time:
-      - Result:
+       - Execution Time: 
+       - Result: 
+   - None-TSP: ✅
+     - CPP ✅
+       - Execution Time:
+       - Result:
+     - OMP ✅
+       - Execution Time:
+       - Result:
      - THRUST ✅
-      - Execution Time: 10.00
-      - Result: 0
+       - Execution Time: 10.00 ms
+       - Result: 0
      - CUDA ✅
-      - Execution Time: 11.00 ms
-      - Result: 0
+       - Execution Time: 11.00 ms
+       - Result: 0
 
 ## Repository Structure
 
