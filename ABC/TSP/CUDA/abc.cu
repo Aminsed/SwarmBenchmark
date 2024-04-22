@@ -82,7 +82,6 @@ __global__ void sendEmployedBees(Bee* bees, int* globalBestPosition, double* glo
 __global__ void sendOnlookerBees(Bee* bees, int* globalBestPosition, double* globalBestFitness, curandState* state) {
     int tid = blockIdx.x * blockDim.x + threadIdx.x;
     if (tid < NUM_BEES) {
-        Bee* b = &bees[tid];
         curandState* s = &state[tid];
         double probabilities[NUM_BEES];
         double maxFitness = bees[0].fitness;
