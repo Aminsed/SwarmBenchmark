@@ -3,11 +3,9 @@
 #include <cuda_runtime.h>
 #include <cmath>
 #define BLOCK_SIZE 256
-#define NUM_PARTICLES 1024
+#define NUM_BEES 1024
 #define MAX_ITERATIONS 1000
-#define COGNITIVE_WEIGHT 1.49 // Cognitive weight (c1) in the velocity update equation
-#define SOCIAL_WEIGHT 1.49 // Social weight (c2) in the velocity update equation
-#define INERTIA_WEIGHT 0.729 // Inertia weight (w) in the velocity update equation
+#define SCOUT_BEE_PROBABILITY 0.1
 #define NUM_CITIES 20 // Number of cities in the TSP problem
 __device__ double distances[NUM_CITIES][NUM_CITIES] = {
     {0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150, 160, 170, 180, 190},
