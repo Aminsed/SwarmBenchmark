@@ -85,16 +85,16 @@ Welcome to the Swarm Intelligence Algorithms Repository! This repository contain
      - Result: 0
 6. Artificial Bee Colony (ABC) Algorithm ✅
    - TSP:
-     - CPP
+     - CPP ✅
        - Execution Time:
        - Result:
-     - OMP
+     - OMP ✅
        - Execution Time:
        - Result:
-     - THRUST
+     - THRUST ✅
        - Execution
        - Result:
-     - CUDA
+     - CUDA ✅
        - Execution Time:
        - Result:
    - None-TSP: ✅
@@ -151,16 +151,16 @@ Welcome to the Swarm Intelligence Algorithms Repository! This repository contain
      - Result: 0.0628388407
 10. Ant Colony Optimization (ACO) ✅
     - TSP:
-      - CPP
+      - CPP ✅
         - Execution Time:
         - Result:
-      - OMP
+      - OMP ✅
         - Execution Time:
         - Result:
-      - THRUST
+      - THRUST ✅
         - Execution
         - Result:
-      - CUDA
+      - CUDA ✅
         - Execution Time:
         - Result:
     - None-TSP: ✅
