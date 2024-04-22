@@ -5,17 +5,17 @@ Welcome to the Swarm Intelligence Algorithms Repository! This repository contain
 ## Algorithms Included
 
 1. Particle Swarm Optimization (PSO) ✅
-   - TSP:
-     - CPP
+   - TSP: ✅
+     - CPP ✅
        - Execution Time:
        - Result:
-     - OMP
+     - OMP ✅
        - Execution Time:
        - Result:
-     - THRUST
+     - THRUST ✅
        - Execution
        - Result:
-     - CUDA
+     - CUDA ✅
        - Execution Time:
        - Result:
    - None-TSP: ✅
