@@ -6,6 +6,7 @@
 #include <random>
 #include <vector>
 #include <cmath>
+#include <fstream>
 
 struct Particle {
     std::vector<double> position;
