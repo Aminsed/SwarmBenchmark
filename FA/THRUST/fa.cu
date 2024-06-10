@@ -7,6 +7,7 @@
 #include <cmath>
 #include <thrust/device_vector.h>
 #include <thrust/extrema.h>
+#include <fstream>
 
 struct Firefly {
     double position[DIMENSIONS];
