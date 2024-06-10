@@ -79,7 +79,7 @@ void runPSO(Particle* particles, double* globalBestPosition, double* globalBestF
     dim3 block(BLOCK_SIZE);
     dim3 grid((NUM_PARTICLES + block.x - 1) / block.x);
 
-    std::ofstream outputFile("results_cuda.txt");
+    std::ofstream outputFile("results.txt");
 
     for (int iter = 0; iter < MAX_ITERATIONS; iter++) {
         updateParticles<<<grid, block>>>(particles, globalBestPosition, globalBestFitness, state);
