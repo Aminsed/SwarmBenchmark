@@ -85,7 +85,8 @@ void runFA(Firefly* fireflies, double* globalBestPosition, double* globalBestFit
     for (int iter = 0; iter < MAX_ITERATIONS; iter++) {
         updateFireflies<<<grid, block>>>(fireflies, globalBestPosition, globalBestFitness, state);
         cudaDeviceSynchronize();
-        double hostGlobalBestFitness = globalBestFitness[0];
+        double hostGlobalBestFitness;
+        cudaMemcpy(&hostGlobalBestFitness, globalBestFitness, sizeof(double), cudaMemcpyDeviceToHost);
         outputFile << iter + 1 << ": " << hostGlobalBestFitness << std::endl;
     }
     outputFile.close();
