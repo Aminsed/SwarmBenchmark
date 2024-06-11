@@ -5,6 +5,7 @@
 #include <cmath>
 #include <random>
 #include <algorithm>
+#include <fstream>
 
 struct Moth {
     double position[DIMENSIONS];
@@ -70,10 +71,13 @@ void sortMothsByFitness(std::vector<Moth>& moths, std::vector<int>& flameIndexes
 }
 
 void runMFO(std::vector<Moth>& moths, std::vector<Flame>& flames, std::vector<int>& flameIndexes, std::mt19937& rng, double& bestFitness) {
+    std::ofstream outputFile("mfo_results.txt");
     for (int iter = 0; iter < MAX_ITERATIONS; iter++) {
         updateMoths(moths, flames, flameIndexes, rng, iter, bestFitness);
         sortMothsByFitness(moths, flameIndexes);
+        outputFile << iter + 1 << ": " << bestFitness << std::endl;
     }
+    outputFile.close();
 }
 
 void printResults(const std::vector<Flame>& flames, double bestFitness, double executionTime) {
