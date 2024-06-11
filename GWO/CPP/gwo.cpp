@@ -4,6 +4,7 @@
 #include <iomanip>
 #include <random>
 #include <cmath>
+#include <fstream>
 
 struct GreyWolf {
     std::vector<double> position;
@@ -83,9 +84,12 @@ void updateGreyWolves(std::vector<GreyWolf>& wolves, std::vector<double>& alpha,
 }
 
 void runGWO(std::vector<GreyWolf>& wolves, std::vector<double>& alpha, std::vector<double>& beta, std::vector<double>& delta) {
+    std::ofstream outputFile("results.txt");
     for (int iter = 0; iter < MAX_ITERATIONS; iter++) {
         updateGreyWolves(wolves, alpha, beta, delta, iter);
+        outputFile << iter + 1 << ": " << alpha[DIMENSIONS] << std::endl;
     }
+    outputFile.close();
 }
 
 void printResults(const std::vector<double>& alpha, double executionTime) {
