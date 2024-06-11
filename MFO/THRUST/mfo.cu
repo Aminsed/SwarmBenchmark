@@ -2,10 +2,12 @@
 #include <cuda_runtime.h>
 #include <curand_kernel.h>
 #include <thrust/device_vector.h>
+#include <thrust/sort.h>
 #include <chrono>
 #include <iostream>
 #include <iomanip>
 #include <cmath>
+#include <fstream>
 
 struct Moth {
     double position[DIMENSIONS];
@@ -28,7 +30,7 @@ __device__ void updateFlame(Moth* m, Flame* flame, double* bestFitness) {
     }
 }
 
-__global__ void initializeMoths(Moth* moths, Flame* flames, curandState* state) {
+__global__ void initializeMoths(Moth* moths, Flame* flames, int* flameIndexes, curandState* state) {
     int tid = blockIdx.x * blockDim.x + threadIdx.x;
     if (tid < NUM_MOTHS) {
         Moth* m = &moths[tid];
@@ -40,6 +42,7 @@ __global__ void initializeMoths(Moth* moths, Flame* flames, curandState* state) 
             f->position[i] = m->position[i];
         }
         m->fitness = objectiveFunction(m->position);
+        flameIndexes[tid] = tid;
     }
 }
 
@@ -66,39 +69,28 @@ __global__ void updateMoths(Moth* moths, Flame* flames, int* flameIndexes, curan
     }
 }
 
-__global__ void sortMothsByFitness(Moth* moths, int* flameIndexes) {
-    extern __shared__ Moth sharedMoths[];
-    int tid = threadIdx.x;
-    int i = blockIdx.x * blockDim.x + threadIdx.x;
-    if (i < NUM_MOTHS) {
-        sharedMoths[tid] = moths[i];
+struct CompareMoths {
+    __device__ bool operator()(const Moth& a, const Moth& b) {
+        return a.fitness < b.fitness;
     }
-    __syncthreads();
-    for (int stride = blockDim.x / 2; stride > 0; stride >>= 1) {
-        if (tid < stride && i + stride < NUM_MOTHS) {
-            if (sharedMoths[tid].fitness > sharedMoths[tid + stride].fitness) {
-                Moth temp = sharedMoths[tid];
-                sharedMoths[tid] = sharedMoths[tid + stride];
-                sharedMoths[tid + stride] = temp;
-            }
-        }
-        __syncthreads();
-    }
-    if (i < NUM_MOTHS) {
-        moths[i] = sharedMoths[tid];
-        flameIndexes[i] = i;
-    }
-}
+};
 
 void runMFO(Moth* moths, Flame* flames, int* flameIndexes, curandState* state, double* bestFitness) {
     dim3 block(BLOCK_SIZE);
     dim3 grid((NUM_MOTHS + block.x - 1) / block.x);
+    std::ofstream outputFile("results.txt");
     for (int iter = 0; iter < MAX_ITERATIONS; iter++) {
         updateMoths<<<grid, block>>>(moths, flames, flameIndexes, state, iter, bestFitness);
         cudaDeviceSynchronize();
-        sortMothsByFitness<<<grid, block, NUM_MOTHS * sizeof(Moth)>>>(moths, flameIndexes);
+        thrust::device_ptr<Moth> mothsPtr(moths);
+        thrust::device_ptr<int> flameIndexesPtr(flameIndexes);
+        thrust::sort_by_key(mothsPtr, mothsPtr + NUM_MOTHS, flameIndexesPtr, CompareMoths());
         cudaDeviceSynchronize();
+        double currentBestFitness;
+        cudaMemcpy(&currentBestFitness, bestFitness, sizeof(double), cudaMemcpyDeviceToHost);
+        outputFile << iter + 1 << ": " << currentBestFitness << std::endl;
     }
+    outputFile.close();
 }
 
 void printResults(Flame* flames, double* bestFitness, double executionTime) {
@@ -131,8 +123,10 @@ int main() {
     cudaMalloc(&flameIndexes, NUM_MOTHS * sizeof(int));
     cudaMalloc(&state, NUM_MOTHS * sizeof(curandState));
     cudaMalloc(&bestFitness, sizeof(double));
+    double initialBestFitness = std::numeric_limits<double>::max();
+    cudaMemcpy(bestFitness, &initialBestFitness, sizeof(double), cudaMemcpyHostToDevice);
     auto start = std::chrono::high_resolution_clock::now();
-    initializeMoths<<<(NUM_MOTHS + BLOCK_SIZE - 1) / BLOCK_SIZE, BLOCK_SIZE>>>(moths, flames, state);
+    initializeMoths<<<(NUM_MOTHS + BLOCK_SIZE - 1) / BLOCK_SIZE, BLOCK_SIZE>>>(moths, flames, flameIndexes, state);
     cudaDeviceSynchronize();
     runMFO(moths, flames, flameIndexes, state, bestFitness);
     auto end = std::chrono::high_resolution_clock::now();
