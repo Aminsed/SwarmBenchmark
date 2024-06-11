@@ -6,6 +6,7 @@
 #include <random>
 #include <algorithm>
 #include <omp.h>
+#include <fstream>
 
 struct Moth {
     double position[DIMENSIONS];
@@ -28,7 +29,7 @@ void updateFlame(Moth& m, Flame& flame, double& bestFitness) {
     }
 }
 
-void initializeMoths(std::vector<Moth>& moths, std::vector<Flame>& flames) {
+void initializeMoths(std::vector<Moth>& moths, std::vector<Flame>& flames, std::vector<int>& flameIndexes) {
     #pragma omp parallel for
     for (int i = 0; i < NUM_MOTHS; i++) {
         std::random_device rd;
@@ -41,6 +42,7 @@ void initializeMoths(std::vector<Moth>& moths, std::vector<Flame>& flames) {
             f.position[j] = m.position[j];
         }
         m.fitness = objectiveFunction(m.position);
+        flameIndexes[i] = i;
     }
 }
 
@@ -70,16 +72,24 @@ void updateMoths(std::vector<Moth>& moths, std::vector<Flame>& flames, std::vect
 }
 
 void sortMothsByFitness(std::vector<Moth>& moths, std::vector<int>& flameIndexes) {
-    std::sort(flameIndexes.begin(), flameIndexes.end(), [&](int i, int j) {
-        return moths[i].fitness < moths[j].fitness;
-    });
+    std::vector<std::pair<double, int>> fitnessIndexPairs(NUM_MOTHS);
+    for (int i = 0; i < NUM_MOTHS; i++) {
+        fitnessIndexPairs[i] = std::make_pair(moths[i].fitness, i);
+    }
+    std::sort(fitnessIndexPairs.begin(), fitnessIndexPairs.end());
+    for (int i = 0; i < NUM_MOTHS; i++) {
+        flameIndexes[i] = fitnessIndexPairs[i].second;
+    }
 }
 
 void runMFO(std::vector<Moth>& moths, std::vector<Flame>& flames, std::vector<int>& flameIndexes, double& bestFitness) {
+    std::ofstream outputFile("results.txt");
     for (int iter = 0; iter < MAX_ITERATIONS; iter++) {
         updateMoths(moths, flames, flameIndexes, iter, bestFitness);
         sortMothsByFitness(moths, flameIndexes);
+        outputFile << iter + 1 << ": " << bestFitness << std::endl;
     }
+    outputFile.close();
 }
 
 void printResults(const std::vector<Flame>& flames, double bestFitness, double executionTime) {
@@ -108,7 +118,7 @@ int main() {
     double bestFitness = std::numeric_limits<double>::max();
 
     auto start = std::chrono::high_resolution_clock::now();
-    initializeMoths(moths, flames);
+    initializeMoths(moths, flames, flameIndexes);
     runMFO(moths, flames, flameIndexes, bestFitness);
     auto end = std::chrono::high_resolution_clock::now();
     double executionTime = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
