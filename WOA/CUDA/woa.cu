@@ -4,6 +4,7 @@
 #include <chrono>
 #include <iostream>
 #include <iomanip>
+#include <fstream>
 
 struct Whale {
     double position[DIMENSIONS];
@@ -74,12 +75,16 @@ __global__ void updateWhales(Whale* whales, double* globalBestPosition, double* 
 }
 
 void runWOA(Whale* whales, double* globalBestPosition, double* globalBestFitness, curandState* state) {
+    std::ofstream outputFile("results.txt");
     dim3 block(BLOCK_SIZE);
     dim3 grid((NUM_WHALES + block.x - 1) / block.x);
     for (int iter = 0; iter < MAX_ITERATIONS; iter++) {
         updateWhales<<<grid, block>>>(whales, globalBestPosition, globalBestFitness, state, iter);
         cudaDeviceSynchronize();
-    }
+        double hostGlobalBestFitness;
+        cudaMemcpy(&hostGlobalBestFitness, globalBestFitness, sizeof(double), cudaMemcpyDeviceToHost);
+        outputFile << iter + 1 << ": " << hostGlobalBestFitness << std::endl;
+    }    outputFile.close();
 }
 
 void printResults(double* globalBestPosition, double globalBestFitness, double executionTime) {
