@@ -7,6 +7,8 @@
 #include <chrono>
 #include <iostream>
 #include <iomanip>
+#include <fstream>
+
 
 struct FoodSource {
     double position[DIMENSIONS];
@@ -110,6 +112,7 @@ __global__ void sendScoutBees(FoodSource* foodSources, curandState* state) {
 void runABC(thrust::device_vector<FoodSource>& d_foodSources, curandState* state) {
     dim3 block(BLOCK_SIZE);
     dim3 grid((NUM_FOOD_SOURCES + block.x - 1) / block.x);
+    std::ofstream outputFile("results.txt");
     for (int iter = 0; iter < MAX_ITERATIONS; iter++) {
         sendEmployedBees<<<grid, block>>>(thrust::raw_pointer_cast(d_foodSources.data()), state);
         cudaDeviceSynchronize();
@@ -117,7 +120,15 @@ void runABC(thrust::device_vector<FoodSource>& d_foodSources, curandState* state
         cudaDeviceSynchronize();
         sendScoutBees<<<grid, block>>>(thrust::raw_pointer_cast(d_foodSources.data()), state);
         cudaDeviceSynchronize();
+        thrust::host_vector<FoodSource> h_foodSources = d_foodSources;
+        auto bestFoodSource = thrust::min_element(h_foodSources.begin(), h_foodSources.end(),
+                                                  [](const FoodSource& a, const FoodSource& b) {
+                                                      return a.fitness < b.fitness;
+                                                  });
+        double bestFitness = bestFoodSource[0].fitness;
+        outputFile << iter + 1 << ": " << bestFitness << std::endl;
     }
+    outputFile.close();
 }
 
 void printResults(FoodSource* foodSources, double executionTime) {
