@@ -4,6 +4,7 @@
 #include <chrono>
 #include <iostream>
 #include <iomanip>
+#include <fstream>
 
 struct FoodSource {
     double position[DIMENSIONS];
@@ -118,12 +119,26 @@ void sendScoutBees(FoodSource* foodSources) {
     }
 }
 
+
 void runABC(FoodSource* foodSources) {
+    std::ofstream outputFile("results.txt");
     for (int iter = 0; iter < MAX_ITERATIONS; iter++) {
         sendEmployedBees(foodSources);
         sendOnlookerBees(foodSources);
         sendScoutBees(foodSources);
+        double bestFitness = foodSources[0].fitness;
+        #pragma omp parallel for reduction(min: bestFitness)
+        for (int i = 1; i < NUM_FOOD_SOURCES; i++) {
+            if (foodSources[i].fitness < bestFitness) {
+                bestFitness = foodSources[i].fitness;
+            }
+        }
+        #pragma omp critical
+        {
+            outputFile << iter + 1 << ": " << bestFitness << std::endl;
+        }
     }
+    outputFile.close();
 }
 
 void printResults(FoodSource* foodSources, double executionTime) {
