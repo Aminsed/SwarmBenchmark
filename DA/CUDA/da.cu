@@ -1,10 +1,11 @@
-// DragonflyAlgorithm.cu
 #include "ObjectiveFunction.cuh"
 #include <cuda_runtime.h>
 #include <curand_kernel.h>
 #include <chrono>
 #include <iostream>
 #include <iomanip>
+#include <fstream>
+
 
 struct Dragonfly {
     double position[DIMENSIONS];
@@ -40,13 +41,32 @@ __global__ void updateDragonflies(Dragonfly* dragonflies, double* globalBestPosi
     if (tid < NUM_DRAGONFLIES) {
         Dragonfly* d = &dragonflies[tid];
         curandState* s = &state[tid];
+        double separation[DIMENSIONS] = {0};
+        double alignment[DIMENSIONS] = {0};
+        double cohesion[DIMENSIONS] = {0};
+        for (int j = 0; j < NUM_DRAGONFLIES; j++) {
+            if (tid != j) {
+                Dragonfly* neighbor = &dragonflies[j];
+                for (int k = 0; k < DIMENSIONS; k++) {
+                    double diff = d->position[k] - neighbor->position[k];
+                    separation[k] += diff;
+                    alignment[k] += neighbor->step[k];
+                    cohesion[k] += neighbor->position[k];                }
+            }
+        }
         for (int i = 0; i < DIMENSIONS; i++) {
+            separation[i] /= (NUM_DRAGONFLIES - 1);
+            alignment[i] /= (NUM_DRAGONFLIES - 1);
+            cohesion[i] /= (NUM_DRAGONFLIES - 1);
+
             double r = curand_uniform_double(s);
-            d->step[i] = SEPARATION_WEIGHT * (globalBestPosition[i] - d->position[i]) +
-                         ALIGNMENT_WEIGHT * d->step[i] +
-                         COHESION_WEIGHT * (globalBestPosition[i] - d->position[i]) +
+            d->step[i] = SEPARATION_WEIGHT * separation[i] +
+                         ALIGNMENT_WEIGHT * alignment[i] +
+                         COHESION_WEIGHT * (cohesion[i] - d->position[i]) +
                          FOOD_ATTRACTION_WEIGHT * (globalBestPosition[i] - d->position[i]) +
-                         ENEMY_DISTRACTION_WEIGHT * (curand_uniform_double(s) * 10.0 - 5.0 - d->position[i]);
+                         ENEMY_DISTRACTION_WEIGHT * (curand_uniform_double(s) - 0.5);
+        }
+        for (int i = 0; i < DIMENSIONS; i++) {
             d->position[i] += d->step[i];
         }
         updateBestFitness(d, globalBestPosition, globalBestFitness);
@@ -54,12 +74,17 @@ __global__ void updateDragonflies(Dragonfly* dragonflies, double* globalBestPosi
 }
 
 void runDragonflyAlgorithm(Dragonfly* dragonflies, double* globalBestPosition, double* globalBestFitness, curandState* state) {
+    std::ofstream outputFile("results.txt");
     dim3 block(BLOCK_SIZE);
     dim3 grid((NUM_DRAGONFLIES + block.x - 1) / block.x);
     for (int iter = 0; iter < MAX_ITERATIONS; iter++) {
         updateDragonflies<<<grid, block>>>(dragonflies, globalBestPosition, globalBestFitness, state);
         cudaDeviceSynchronize();
+        double hostGlobalBestFitness;
+        cudaMemcpy(&hostGlobalBestFitness, globalBestFitness, sizeof(double), cudaMemcpyDeviceToHost);
+        outputFile << iter + 1 << ": " << hostGlobalBestFitness << std::endl;
     }
+    outputFile.close();
 }
 
 void printResults(double* globalBestPosition, double globalBestFitness, double executionTime) {
