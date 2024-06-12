@@ -3,6 +3,7 @@
 #include <iostream>
 #include <iomanip>
 #include <random>
+#include <fstream>
 
 struct FoodSource {
     double position[DIMENSIONS];
@@ -104,11 +105,20 @@ void sendScoutBees(FoodSource* foodSources, std::mt19937& rng) {
 }
 
 void runABC(FoodSource* foodSources, std::mt19937& rng) {
+    std::ofstream outputFile("results.txt");
     for (int iter = 0; iter < MAX_ITERATIONS; iter++) {
         sendEmployedBees(foodSources, rng);
         sendOnlookerBees(foodSources, rng);
         sendScoutBees(foodSources, rng);
+        double bestFitness = foodSources[0].fitness;
+        for (int i = 1; i < NUM_FOOD_SOURCES; i++) {
+            if (foodSources[i].fitness < bestFitness) {
+                bestFitness = foodSources[i].fitness;
+            }
+        }
+        outputFile << iter + 1 << ": " << bestFitness << std::endl;
     }
+    outputFile.close();
 }
 
 void printResults(FoodSource* foodSources, double executionTime) {
