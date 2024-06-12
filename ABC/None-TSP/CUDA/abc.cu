@@ -4,6 +4,7 @@
 #include <chrono>
 #include <iostream>
 #include <iomanip>
+#include <fstream>
 
 struct FoodSource {
     double position[DIMENSIONS];
@@ -107,6 +108,7 @@ __global__ void sendScoutBees(FoodSource* foodSources, curandState* state) {
 void runABC(FoodSource* foodSources, curandState* state) {
     dim3 block(BLOCK_SIZE);
     dim3 grid((NUM_FOOD_SOURCES + block.x - 1) / block.x);
+    std::ofstream outputFile("results.txt");
     for (int iter = 0; iter < MAX_ITERATIONS; iter++) {
         sendEmployedBees<<<grid, block>>>(foodSources, state);
         cudaDeviceSynchronize();
@@ -114,7 +116,18 @@ void runABC(FoodSource* foodSources, curandState* state) {
         cudaDeviceSynchronize();
         sendScoutBees<<<grid, block>>>(foodSources, state);
         cudaDeviceSynchronize();
+        FoodSource hostFoodSources[NUM_FOOD_SOURCES];
+        cudaMemcpy(hostFoodSources, foodSources, NUM_FOOD_SOURCES * sizeof(FoodSource), cudaMemcpyDeviceToHost);
+        double bestFitness = hostFoodSources[0].fitness;
+        for (int i = 1; i < NUM_FOOD_SOURCES; i++) {
+            if (hostFoodSources[i].fitness < bestFitness) {
+                bestFitness = hostFoodSources[i].fitness;
+            }
+        }
+        outputFile << iter + 1 << ": " << bestFitness << std::endl;
     }
+
+    outputFile.close();
 }
 
 void printResults(FoodSource* foodSources, double executionTime) {
