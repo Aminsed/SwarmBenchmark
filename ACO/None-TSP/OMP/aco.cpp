@@ -4,6 +4,8 @@
 #include <iomanip>
 #include <random>
 #include <omp.h>
+#include <fstream>
+
 
 struct Ant {
     double position[DIMENSIONS];
@@ -12,7 +14,7 @@ struct Ant {
 
 void updatePheromone(double* pheromone, double* bestPosition, double bestFitness) {
     for (int i = 0; i < DIMENSIONS; i++) {
-        pheromone[i] += Q / bestFitness;
+        pheromone[i] += Q / (bestFitness + 1e-10);
     }
 }
 
@@ -23,10 +25,12 @@ void initializeAnts(Ant* ants, double* pheromone, std::mt19937* rng) {
         std::uniform_real_distribution<double> dist(-5.0, 5.0);
         for (int i = 0; i < DIMENSIONS; i++) {
             a->position[i] = dist(rng[omp_get_thread_num()]);
+            pheromone[i] = 1.0;
         }
         a->fitness = objectiveFunction(a->position);
     }
 }
+
 
 void updateAnts(Ant* ants, double* pheromone, double* bestPosition, double* bestFitness, std::mt19937* rng) {
     #pragma omp parallel for
@@ -36,7 +40,7 @@ void updateAnts(Ant* ants, double* pheromone, double* bestPosition, double* best
         for (int i = 0; i < DIMENSIONS; i++) {
             double r = dist(rng[omp_get_thread_num()]);
             if (r < PHEROMONE_WEIGHT) {
-                a->position[i] = bestPosition[i];
+                a->position[i] = bestPosition[i] + (dist(rng[omp_get_thread_num()]) * 2.0 - 1.0);
             } else {
                 a->position[i] += dist(rng[omp_get_thread_num()]) * 2.0 - 1.0;
             }
@@ -49,16 +53,19 @@ void updateAnts(Ant* ants, double* pheromone, double* bestPosition, double* best
                 for (int i = 0; i < DIMENSIONS; i++) {
                     bestPosition[i] = a->position[i];
                 }
-                updatePheromone(pheromone, bestPosition, *bestFitness);
             }
         }
     }
+    updatePheromone(pheromone, bestPosition, *bestFitness);
 }
 
 void runACO(Ant* ants, double* pheromone, double* bestPosition, double* bestFitness, std::mt19937* rng) {
+    std::ofstream outputFile("results.txt");
     for (int iter = 0; iter < MAX_ITERATIONS; iter++) {
         updateAnts(ants, pheromone, bestPosition, bestFitness, rng);
+        outputFile << iter + 1 << ": " << *bestFitness << std::endl;
     }
+    outputFile.close();
 }
 
 void printResults(double* bestPosition, double bestFitness, double executionTime) {
