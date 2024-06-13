@@ -9,6 +9,7 @@
 #include <thrust/device_vector.h>
 #include <thrust/host_vector.h>
 #include <thrust/copy.h>
+#include <fstream>
 
 struct Grasshopper {
     double position[DIMENSIONS];
@@ -67,12 +68,16 @@ __global__ void updateGrasshoppers(Grasshopper* grasshoppers, double* globalBest
 }
 
 void runGOA(thrust::device_vector<Grasshopper>& grasshoppers, thrust::device_vector<double>& globalBestPosition, thrust::device_vector<double>& globalBestFitness, thrust::device_vector<curandState>& state) {
+    std::ofstream outputFile("results.txt");
     dim3 block(BLOCK_SIZE);
     dim3 grid((NUM_GRASSHOPPERS + block.x - 1) / block.x);
     for (int iter = 0; iter < MAX_ITERATIONS; iter++) {
         updateGrasshoppers<<<grid, block>>>(thrust::raw_pointer_cast(grasshoppers.data()), thrust::raw_pointer_cast(globalBestPosition.data()), thrust::raw_pointer_cast(globalBestFitness.data()), thrust::raw_pointer_cast(state.data()), iter);
         cudaDeviceSynchronize();
+        double hostGlobalBestFitness = globalBestFitness[0];
+        outputFile << iter + 1 << ": " << hostGlobalBestFitness << std::endl;
     }
+    outputFile.close();
 }
 
 void printResults(thrust::host_vector<double>& globalBestPosition, double globalBestFitness, double executionTime) {
