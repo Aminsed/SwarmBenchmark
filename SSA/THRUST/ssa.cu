@@ -7,6 +7,9 @@
 #include <thrust/device_vector.h>
 #include <thrust/host_vector.h>
 #include <thrust/copy.h>
+#include <fstream>
+
+
 
 struct Salp {
     double position[DIMENSIONS];
@@ -67,10 +70,15 @@ __global__ void updateSalps(Salp* salps, double* globalBestPosition, double* glo
 void runSSA(Salp* salps, double* globalBestPosition, double* globalBestFitness, curandState* state) {
     dim3 block(BLOCK_SIZE);
     dim3 grid((NUM_SALPS + block.x - 1) / block.x);
+    std::ofstream outputFile("results.txt");
     for (int iter = 0; iter < MAX_ITERATIONS; iter++) {
         updateSalps<<<grid, block>>>(salps, globalBestPosition, globalBestFitness, state, iter);
         cudaDeviceSynchronize();
+        double hostGlobalBestFitness;
+        cudaMemcpy(&hostGlobalBestFitness, globalBestFitness, sizeof(double), cudaMemcpyDeviceToHost);
+        outputFile << iter + 1 << ": " << hostGlobalBestFitness << std::endl;
     }
+    outputFile.close();
 }
 
 void printResults(thrust::host_vector<double>& globalBestPosition, double globalBestFitness, double executionTime) {
