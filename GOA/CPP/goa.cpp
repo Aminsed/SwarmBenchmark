@@ -4,6 +4,8 @@
 #include <iomanip>
 #include <cmath>
 #include <random>
+#include <fstream>
+
 
 struct Grasshopper {
     double position[DIMENSIONS];
@@ -66,9 +68,12 @@ void updateGrasshoppers(std::vector<Grasshopper>& grasshoppers, double* globalBe
 }
 
 void runGOA(std::vector<Grasshopper>& grasshoppers, double* globalBestPosition, double& globalBestFitness) {
+    std::ofstream outputFile("results.txt");
     for (int iter = 0; iter < MAX_ITERATIONS; iter++) {
         updateGrasshoppers(grasshoppers, globalBestPosition, globalBestFitness, iter);
+        outputFile << iter + 1 << ": " << globalBestFitness << std::endl;
     }
+    outputFile.close();
 }
 
 void printResults(double* globalBestPosition, double globalBestFitness, double executionTime) {
