@@ -34,6 +34,7 @@ __device__ double objectiveFunction(double* position) {
     return 20.0 + sum;
 }
 
+
 /*
 // Griewank function
 #define DIMENSIONS 3 // Number of dimensions in the optimization problem
