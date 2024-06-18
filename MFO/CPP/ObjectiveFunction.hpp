@@ -4,7 +4,6 @@
 #include <cmath>
 #include <vector>
 
-const int DIMENSIONS = 2;
 const int NUM_MOTHS = 1024;
 const int MAX_ITERATIONS = 1000;
 
