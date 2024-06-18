@@ -23,7 +23,7 @@ double objectiveFunction(const std::vector<double>& position) {
 */
 
 
-
+/*
 // Rastrigin function
 #define DIMENSIONS 2 // Number of dimensions in the optimization problem
 
@@ -35,6 +35,7 @@ double objectiveFunction(const std::vector<double>& position) {
     }
     return 20.0 + sum;
 }
+*/
 
 /*
 // Griewank function
@@ -49,7 +50,7 @@ double objectiveFunction(const std::vector<double>& position) {
 */
 
 
-/*
+
 // Schaffer function N.4
 #define DIMENSIONS 4 // Number of dimensions in the optimization problem
 
@@ -60,6 +61,6 @@ double objectiveFunction(const std::vector<double>& position) {
     double denominator = pow(1.0 + 0.001 * (x * x + y * y), 2);
     return 0.5 + numerator / denominator;
 }
-*/
+
 
 #endif

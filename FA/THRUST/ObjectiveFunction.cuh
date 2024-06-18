@@ -23,7 +23,7 @@ __device__ double objectiveFunction(double* position) {
 }
 */
 
-
+/*
 // Rastrigin function
 
 #define DIMENSIONS 2 // Number of dimensions in the optimization problem
@@ -36,7 +36,7 @@ __device__ double objectiveFunction(double* position) {
     }
     return 20.0 + sum;
 }
-
+*/
 
 /*
 // Griewank function
@@ -51,7 +51,6 @@ __device__ double objectiveFunction(double* position) {
 */
 
 
-/*
 // Schaffer function N.4
 #define DIMENSIONS 4 // Number of dimensions in the optimization problem
 
@@ -62,6 +61,6 @@ __device__ double objectiveFunction(double* position) {
     double denominator = pow(1.0 + 0.001 * (x * x + y * y), 2);
     return 0.5 + numerator / denominator;
 }
-*/
+
 
 #endif
