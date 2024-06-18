@@ -3,6 +3,8 @@
 #include <iostream>
 #include <iomanip>
 #include <random>
+#include <fstream>
+
 
 struct Ant {
     double position[DIMENSIONS];
@@ -11,7 +13,7 @@ struct Ant {
 
 void updatePheromone(double* pheromone, double* bestPosition, double bestFitness) {
     for (int i = 0; i < DIMENSIONS; i++) {
-        pheromone[i] += Q / bestFitness;
+        pheromone[i] += Q / (bestFitness + 1e-10);
     }
 }
 
@@ -21,6 +23,7 @@ void initializeAnts(Ant* ants, double* pheromone, std::mt19937& rng) {
         Ant& a = ants[i];
         for (int j = 0; j < DIMENSIONS; j++) {
             a.position[j] = dist(rng);
+            pheromone[j] = 1.0;
         }
         a.fitness = objectiveFunction(a.position);
     }
@@ -34,7 +37,7 @@ void updateAnts(Ant* ants, double* pheromone, double* bestPosition, double& best
         for (int j = 0; j < DIMENSIONS; j++) {
             double r = dist(rng);
             if (r < PHEROMONE_WEIGHT) {
-                a.position[j] = bestPosition[j];
+                a.position[j] = bestPosition[j] + stepDist(rng);
             } else {
                 a.position[j] += stepDist(rng);
             }
@@ -45,15 +48,18 @@ void updateAnts(Ant* ants, double* pheromone, double* bestPosition, double& best
             for (int j = 0; j < DIMENSIONS; j++) {
                 bestPosition[j] = a.position[j];
             }
-            updatePheromone(pheromone, bestPosition, bestFitness);
         }
     }
+    updatePheromone(pheromone, bestPosition, bestFitness);
 }
 
 void runACO(Ant* ants, double* pheromone, double* bestPosition, double& bestFitness, std::mt19937& rng) {
+    std::ofstream outputFile("results.txt");
     for (int iter = 0; iter < MAX_ITERATIONS; iter++) {
         updateAnts(ants, pheromone, bestPosition, bestFitness, rng);
+        outputFile << iter + 1 << ": " << bestFitness << std::endl;
     }
+    outputFile.close();
 }
 
 void printResults(double* bestPosition, double bestFitness, double executionTime) {

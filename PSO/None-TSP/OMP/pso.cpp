@@ -6,6 +6,7 @@
 #include <vector>
 #include <cmath>
 #include <omp.h>
+#include <fstream>
 
 struct Particle {
     std::vector<double> position;
@@ -80,9 +81,13 @@ void updateParticles(std::vector<Particle>& particles, std::vector<double>& glob
 }
 
 void runPSO(std::vector<Particle>& particles, std::vector<double>& globalBestPosition, double& globalBestFitness) {
+    std::ofstream outputFile("results.txt");
+
     for (int iter = 0; iter < MAX_ITERATIONS; ++iter) {
         updateParticles(particles, globalBestPosition, globalBestFitness);
+        outputFile << iter + 1 << ": " << globalBestFitness << std::endl;
     }
+    outputFile.close();
 }
 
 void printResults(const std::vector<double>& globalBestPosition, double globalBestFitness, double executionTime) {

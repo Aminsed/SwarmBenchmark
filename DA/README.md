@@ -9,7 +9,7 @@ The Dragonfly Algorithm is based on the following mathematical formulas:
 
 ### Separation
 ```plaintext
-S_i = - sum(X - X_j)
+S_i = sum(X - X_j) / N
 ```
 
 ### Alignment
@@ -63,8 +63,8 @@ while termination condition is not met:
     Update the food source and enemy positions
     for each dragonfly:
         Calculate separation, alignment, cohesion, attraction, and distraction
-        Update the velocity and position of the dragonfly
-    Update the step vector
+        Update the step vector based on separation, alignment, cohesion, attraction, and distraction
+        Update the position of the dragonfly
     Check and adjust the boundaries of dragonflies' positions
     Update the best solution found so far
 ```

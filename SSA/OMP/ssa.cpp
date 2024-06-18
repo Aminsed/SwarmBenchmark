@@ -4,6 +4,8 @@
 #include <iomanip>
 #include <omp.h>
 #include <random>
+#include <fstream>
+
 
 struct Salp {
     double position[DIMENSIONS];
@@ -68,9 +70,15 @@ void updateSalps(Salp* salps, double* globalBestPosition, double* globalBestFitn
 }
 
 void runSSA(Salp* salps, double* globalBestPosition, double* globalBestFitness) {
+    std::ofstream outputFile("results.txt");
     for (int iter = 0; iter < MAX_ITERATIONS; iter++) {
         updateSalps(salps, globalBestPosition, globalBestFitness, iter);
+        #pragma omp critical
+        {
+            outputFile << iter + 1 << ": " << *globalBestFitness << std::endl;
+        }
     }
+    outputFile.close();
 }
 
 void printResults(double* globalBestPosition, double globalBestFitness, double executionTime) {

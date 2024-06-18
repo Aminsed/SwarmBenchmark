@@ -6,6 +6,7 @@
 #include <iomanip>
 #include <thrust/device_vector.h>
 #include <thrust/extrema.h>
+#include <fstream>
 
 struct GreyWolf {
     double position[DIMENSIONS];
@@ -13,21 +14,23 @@ struct GreyWolf {
 };
 
 __device__ void updateLeaders(GreyWolf* wolf, double* alpha, double* beta, double* delta) {
-    if (wolf->fitness < objectiveFunction(alpha)) {
+    if (wolf->fitness < alpha[DIMENSIONS]) {
         for (int i = 0; i < DIMENSIONS; i++) {
-            delta[i] = beta[i];
-            beta[i] = alpha[i];
             alpha[i] = wolf->position[i];
         }
-    } else if (wolf->fitness < objectiveFunction(beta)) {
+        alpha[DIMENSIONS] = wolf->fitness;
+    }
+    if (wolf->fitness < beta[DIMENSIONS] && wolf->fitness > alpha[DIMENSIONS]) {
         for (int i = 0; i < DIMENSIONS; i++) {
-            delta[i] = beta[i];
             beta[i] = wolf->position[i];
         }
-    } else if (wolf->fitness < objectiveFunction(delta)) {
+        beta[DIMENSIONS] = wolf->fitness;
+    }
+    if (wolf->fitness < delta[DIMENSIONS] && wolf->fitness > beta[DIMENSIONS]) {
         for (int i = 0; i < DIMENSIONS; i++) {
             delta[i] = wolf->position[i];
         }
+        delta[DIMENSIONS] = wolf->fitness;
     }
 }
 
@@ -80,19 +83,18 @@ __global__ void updateGreyWolves(GreyWolf* wolves, double* alpha, double* beta, 
 void runGWO(GreyWolf* wolves, double* alpha, double* beta, double* delta, curandState* state) {
     dim3 block(BLOCK_SIZE);
     dim3 grid((NUM_WOLVES + block.x - 1) / block.x);
+    std::ofstream outputFile("results.txt");
     for (int iter = 0; iter < MAX_ITERATIONS; iter++) {
         updateGreyWolves<<<grid, block>>>(wolves, alpha, beta, delta, state, iter);
         cudaDeviceSynchronize();
+        double bestFitness;
+        cudaMemcpy(&bestFitness, &alpha[DIMENSIONS], sizeof(double), cudaMemcpyDeviceToHost);
+        outputFile << iter + 1 << ": " << bestFitness << std::endl;
     }
+    outputFile.close();
 }
 
-__global__ void calculateAlphaFitness(double* alpha, double* alphaFitness) {
-    if (threadIdx.x == 0) {
-        *alphaFitness = objectiveFunction(alpha);
-    }
-}
-
-void printResults(double* alpha, double alphaFitness, double executionTime) {
+void printResults(double* alpha, double executionTime) {
     std::cout << std::fixed << std::setprecision(10);
     if (DIMENSIONS == 1) {
         std::cout << "Best Position: " << alpha[0] << std::endl;
@@ -106,18 +108,22 @@ void printResults(double* alpha, double alphaFitness, double executionTime) {
         }
         std::cout << ")" << std::endl;
     }
-    std::cout << "Best Fitness: " << alphaFitness << std::endl;
+    std::cout << "Best Fitness: " << alpha[DIMENSIONS] << std::endl;
     std::cout << std::fixed << std::setprecision(2);
     std::cout << "Execution Time: " << executionTime << " milliseconds" << std::endl;
 }
 
 int main() {
     thrust::device_vector<GreyWolf> d_wolves(NUM_WOLVES);
-    thrust::device_vector<double> d_alpha(DIMENSIONS);
-    thrust::device_vector<double> d_beta(DIMENSIONS);
-    thrust::device_vector<double> d_delta(DIMENSIONS);
+    thrust::device_vector<double> d_alpha(DIMENSIONS + 1);
+    thrust::device_vector<double> d_beta(DIMENSIONS + 1);
+    thrust::device_vector<double> d_delta(DIMENSIONS + 1);
     thrust::device_vector<curandState> d_state(NUM_WOLVES);
-    thrust::device_vector<double> d_alphaFitness(1);
+
+    double initialFitness = INFINITY;
+    thrust::fill(d_alpha.begin() + DIMENSIONS, d_alpha.end(), initialFitness);
+    thrust::fill(d_beta.begin() + DIMENSIONS, d_beta.end(), initialFitness);
+    thrust::fill(d_delta.begin() + DIMENSIONS, d_delta.end(), initialFitness);
 
     auto start = std::chrono::high_resolution_clock::now();
 
@@ -138,20 +144,12 @@ int main() {
         thrust::raw_pointer_cast(d_state.data())
     );
 
-    calculateAlphaFitness<<<1, 1>>>(
-        thrust::raw_pointer_cast(d_alpha.data()),
-        thrust::raw_pointer_cast(d_alphaFitness.data())
-    );
-    cudaDeviceSynchronize();
-
     auto end = std::chrono::high_resolution_clock::now();
     double executionTime = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
 
-    double hostAlpha[DIMENSIONS];
-    thrust::copy(d_alpha.begin(), d_alpha.end(), hostAlpha);
-    double alphaFitness = d_alphaFitness[0];
-
-    printResults(hostAlpha, alphaFitness, executionTime);
+    double hostAlpha[DIMENSIONS + 1];
+    cudaMemcpy(hostAlpha, thrust::raw_pointer_cast(d_alpha.data()), (DIMENSIONS + 1) * sizeof(double), cudaMemcpyDeviceToHost);
+    printResults(hostAlpha, executionTime);
 
     return 0;
 }

@@ -6,6 +6,7 @@
 #include <vector>
 #include <random>
 #include <algorithm>
+#include <fstream>
 
 struct Firefly {
     std::vector<double> position;
@@ -68,9 +69,12 @@ void updateFireflies(std::vector<Firefly>& fireflies, std::vector<double>& globa
 }
 
 void runFA(std::vector<Firefly>& fireflies, std::vector<double>& globalBestPosition, double& globalBestFitness) {
+    std::ofstream outputFile("results.txt");
     for (int iter = 0; iter < MAX_ITERATIONS; iter++) {
         updateFireflies(fireflies, globalBestPosition, globalBestFitness);
+        outputFile << iter + 1 << ": " << globalBestFitness << std::endl;
     }
+    outputFile.close();
 }
 
 void printResults(const std::vector<double>& globalBestPosition, double globalBestFitness, double executionTime) {

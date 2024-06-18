@@ -4,6 +4,7 @@
 #include <iomanip>
 #include <cmath>
 #include <random>
+#include <fstream>
 
 struct Whale {
     double position[DIMENSIONS];
@@ -72,9 +73,13 @@ void updateWhales(Whale* whales, double* globalBestPosition, double* globalBestF
 }
 
 void runWOA(Whale* whales, double* globalBestPosition, double* globalBestFitness, std::mt19937& rng) {
+    std::ofstream outputFile("results.txt");
     for (int iter = 0; iter < MAX_ITERATIONS; iter++) {
         updateWhales(whales, globalBestPosition, globalBestFitness, rng, iter);
+
+        outputFile << iter + 1 << ": " << *globalBestFitness << std::endl;
     }
+    outputFile.close();
 }
 
 void printResults(double* globalBestPosition, double globalBestFitness, double executionTime) {

@@ -6,6 +6,7 @@
 #include <random>
 #include <vector>
 #include <cmath>
+#include <fstream>
 
 struct Particle {
     std::vector<double> position;
@@ -72,9 +73,16 @@ void updateParticles(std::vector<Particle>& particles, std::vector<double>& glob
 }
 
 void runPSO(std::vector<Particle>& particles, std::vector<double>& globalBestPosition, double& globalBestFitness) {
+    std::ofstream outputFile("results.txt");
+
     for (int iter = 0; iter < MAX_ITERATIONS; iter++) {
         updateParticles(particles, globalBestPosition, globalBestFitness);
+
+        // Write the global best fitness value of each iteration to the file
+        outputFile << iter + 1 << ": " << globalBestFitness << std::endl;
     }
+
+    outputFile.close();
 }
 
 void printResults(const std::vector<double>& globalBestPosition, double globalBestFitness, double executionTime) {

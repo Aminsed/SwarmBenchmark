@@ -4,6 +4,7 @@
 #include <chrono>
 #include <iostream>
 #include <iomanip>
+#include <fstream>
 
 struct GreyWolf {
     double position[DIMENSIONS];
@@ -90,13 +91,19 @@ __global__ void updateGreyWolves(GreyWolf* wolves, double* alpha, double* beta, 
     }
 }
 
+
 void runGWO(GreyWolf* wolves, double* alpha, double* beta, double* delta, curandState* state) {
     dim3 block(BLOCK_SIZE);
     dim3 grid((NUM_WOLVES + block.x - 1) / block.x);
+    std::ofstream outputFile("results.txt");
     for (int iter = 0; iter < MAX_ITERATIONS; iter++) {
         updateGreyWolves<<<grid, block>>>(wolves, alpha, beta, delta, state, iter);
         cudaDeviceSynchronize();
+        double bestFitness;
+        cudaMemcpy(&bestFitness, &alpha[DIMENSIONS], sizeof(double), cudaMemcpyDeviceToHost);
+        outputFile << iter + 1 << ": " << bestFitness << std::endl;
     }
+    outputFile.close();
 }
 
 void printResults(double* alpha, double executionTime) {
@@ -133,20 +140,35 @@ int main() {
     cudaMemcpy(&alpha[DIMENSIONS], &initialFitness, sizeof(double), cudaMemcpyHostToDevice);
     cudaMemcpy(&beta[DIMENSIONS], &initialFitness, sizeof(double), cudaMemcpyHostToDevice);
     cudaMemcpy(&delta[DIMENSIONS], &initialFitness, sizeof(double), cudaMemcpyHostToDevice);
+
     auto start = std::chrono::high_resolution_clock::now();
     initializeGreyWolves<<<(NUM_WOLVES + BLOCK_SIZE - 1) / BLOCK_SIZE, BLOCK_SIZE>>>(wolves, alpha, beta, delta, state);
     cudaDeviceSynchronize();
-    runGWO(wolves, alpha, beta, delta, state);
+
+    std::ofstream outputFile("results.txt");
+    for (int iter = 0; iter < MAX_ITERATIONS; iter++) {
+        updateGreyWolves<<<(NUM_WOLVES + BLOCK_SIZE - 1) / BLOCK_SIZE, BLOCK_SIZE>>>(wolves, alpha, beta, delta, state, iter);
+        cudaDeviceSynchronize();
+
+        double bestFitness;
+        cudaMemcpy(&bestFitness, &alpha[DIMENSIONS], sizeof(double), cudaMemcpyDeviceToHost);
+        outputFile << iter + 1 << ": " << bestFitness << std::endl;
+    }
+    outputFile.close();
+
     auto end = std::chrono::high_resolution_clock::now();
     double executionTime = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
+
     double hostAlpha[DIMENSIONS + 1];
     cudaMemcpy(hostAlpha, alpha, (DIMENSIONS + 1) * sizeof(double), cudaMemcpyDeviceToHost);
     printResults(hostAlpha, executionTime);
+
     cudaFree(wolves);
     cudaFree(alpha);
     cudaFree(beta);
     cudaFree(delta);
     cudaFree(state);
     cudaDeviceReset();
+
     return 0;
 }

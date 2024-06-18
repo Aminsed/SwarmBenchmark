@@ -20,6 +20,7 @@ double objectiveFunction(const std::vector<double>& position) {
 }
 */
 
+
 // Rastrigin function
 constexpr int DIMENSIONS = 2; // Number of dimensions in the optimization problem
 
@@ -31,6 +32,7 @@ double objectiveFunction(const std::vector<double>& position) {
     }
     return 20.0 + sum;
 }
+
 
 /*
 // Griewank function

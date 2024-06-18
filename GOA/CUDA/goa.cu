@@ -5,6 +5,7 @@
 #include <iostream>
 #include <iomanip>
 #include <cmath>
+#include <fstream>
 
 struct Grasshopper {
     double position[DIMENSIONS];
@@ -63,12 +64,17 @@ __global__ void updateGrasshoppers(Grasshopper* grasshoppers, double* globalBest
 }
 
 void runGOA(Grasshopper* grasshoppers, double* globalBestPosition, double* globalBestFitness, curandState* state) {
+    std::ofstream outputFile("results.txt");
     dim3 block(BLOCK_SIZE);
     dim3 grid((NUM_GRASSHOPPERS + block.x - 1) / block.x);
     for (int iter = 0; iter < MAX_ITERATIONS; iter++) {
         updateGrasshoppers<<<grid, block>>>(grasshoppers, globalBestPosition, globalBestFitness, state, iter);
         cudaDeviceSynchronize();
+        double hostGlobalBestFitness;
+        cudaMemcpy(&hostGlobalBestFitness, globalBestFitness, sizeof(double), cudaMemcpyDeviceToHost);
+        outputFile << iter + 1 << ": " << hostGlobalBestFitness << std::endl;
     }
+    outputFile.close();
 }
 
 void printResults(double* globalBestPosition, double globalBestFitness, double executionTime) {

@@ -7,6 +7,7 @@
 #include <cmath>
 #include <thrust/device_vector.h>
 #include <thrust/extrema.h>
+#include <fstream>
 
 struct Firefly {
     double position[DIMENSIONS];
@@ -80,11 +81,15 @@ __global__ void updateFireflies(Firefly* fireflies, double* globalBestPosition, 
 void runFA(Firefly* fireflies, double* globalBestPosition, double* globalBestFitness, curandState* state) {
     dim3 block(BLOCK_SIZE);
     dim3 grid((NUM_FIREFLIES + block.x - 1) / block.x);
-
+    std::ofstream outputFile("results.txt");
     for (int iter = 0; iter < MAX_ITERATIONS; iter++) {
         updateFireflies<<<grid, block>>>(fireflies, globalBestPosition, globalBestFitness, state);
         cudaDeviceSynchronize();
+        double hostGlobalBestFitness;
+        cudaMemcpy(&hostGlobalBestFitness, globalBestFitness, sizeof(double), cudaMemcpyDeviceToHost);
+        outputFile << iter + 1 << ": " << hostGlobalBestFitness << std::endl;
     }
+    outputFile.close();
 }
 
 void printResults(double* globalBestPosition, double globalBestFitness, double executionTime) {

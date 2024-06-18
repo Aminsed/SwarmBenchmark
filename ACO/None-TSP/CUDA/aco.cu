@@ -4,6 +4,8 @@
 #include <chrono>
 #include <iostream>
 #include <iomanip>
+#include <fstream>
+
 
 struct Ant {
     double position[DIMENSIONS];
@@ -12,7 +14,7 @@ struct Ant {
 
 __device__ void updatePheromone(double* pheromone, double* bestPosition, double bestFitness) {
     for (int i = 0; i < DIMENSIONS; i++) {
-        pheromone[i] += Q / bestFitness;
+        pheromone[i] += Q / (bestFitness + 1e-10);
     }
 }
 
@@ -21,9 +23,9 @@ __global__ void initializeAnts(Ant* ants, double* pheromone, curandState* state)
     if (tid < NUM_ANTS) {
         Ant* a = &ants[tid];
         curandState* s = &state[tid];
-        curand_init(clock64(), tid, 0, s);
         for (int i = 0; i < DIMENSIONS; i++) {
             a->position[i] = curand_uniform_double(s) * 10.0 - 5.0;
+            pheromone[i] = 1.0;
         }
         a->fitness = objectiveFunction(a->position);
     }
@@ -37,7 +39,7 @@ __global__ void updateAnts(Ant* ants, double* pheromone, double* bestPosition, d
         for (int i = 0; i < DIMENSIONS; i++) {
             double r = curand_uniform_double(s);
             if (r < PHEROMONE_WEIGHT) {
-                a->position[i] = bestPosition[i];
+                a->position[i] = bestPosition[i] + (curand_uniform_double(s) * 2.0 - 1.0);
             } else {
                 a->position[i] += curand_uniform_double(s) * 2.0 - 1.0;
             }
@@ -48,18 +50,27 @@ __global__ void updateAnts(Ant* ants, double* pheromone, double* bestPosition, d
             for (int i = 0; i < DIMENSIONS; i++) {
                 bestPosition[i] = a->position[i];
             }
-            updatePheromone(pheromone, bestPosition, *bestFitness);
         }
+    }
+    __syncthreads();
+    if (tid == 0) {
+        updatePheromone(pheromone, bestPosition, *bestFitness);
     }
 }
 
+
 void runACO(Ant* ants, double* pheromone, double* bestPosition, double* bestFitness, curandState* state) {
-    dim3 block(BLOCK_SIZE);
+    std::ofstream outputFile("results.txt");
+    dim3 block(256);
     dim3 grid((NUM_ANTS + block.x - 1) / block.x);
     for (int iter = 0; iter < MAX_ITERATIONS; iter++) {
         updateAnts<<<grid, block>>>(ants, pheromone, bestPosition, bestFitness, state);
         cudaDeviceSynchronize();
+        double hostBestFitness;
+        cudaMemcpy(&hostBestFitness, bestFitness, sizeof(double), cudaMemcpyDeviceToHost);
+        outputFile << iter + 1 << ": " << hostBestFitness << std::endl;
     }
+    outputFile.close();
 }
 
 void printResults(double* bestPosition, double bestFitness, double executionTime) {
