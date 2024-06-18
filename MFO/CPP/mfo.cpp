@@ -17,8 +17,11 @@ struct Flame {
 };
 
 void updateFlame(Moth& m, Flame& flame, double& bestFitness) {
-    double fitness = objectiveFunction(m.position);
-    if (fitness < objectiveFunction(flame.position)) {
+    std::vector<double> mPosition(m.position, m.position + DIMENSIONS);
+    double fitness = objectiveFunction(mPosition);
+    
+    std::vector<double> flamePosition(flame.position, flame.position + DIMENSIONS);
+    if (fitness < objectiveFunction(flamePosition)) {
         for (int i = 0; i < DIMENSIONS; i++) {
             flame.position[i] = m.position[i];
         }
@@ -37,7 +40,8 @@ void initializeMoths(std::vector<Moth>& moths, std::vector<Flame>& flames, std::
             m.position[j] = dist(rng);
             f.position[j] = m.position[j];
         }
-        m.fitness = objectiveFunction(m.position);
+        std::vector<double> mPosition(m.position, m.position + DIMENSIONS);
+        m.fitness = objectiveFunction(mPosition);
         flameIndexes[i] = i;
     }
 }
@@ -60,7 +64,8 @@ void updateMoths(std::vector<Moth>& moths, std::vector<Flame>& flames, std::vect
                 m.position[j] = distance * std::exp(b * t) * std::sin(t * 2 * M_PI) + flame.position[j];
             }
         }
-        m.fitness = objectiveFunction(m.position);
+        std::vector<double> mPosition(m.position, m.position + DIMENSIONS);
+        m.fitness = objectiveFunction(mPosition);
         updateFlame(m, flame, bestFitness);
     }
 }

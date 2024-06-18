@@ -2,14 +2,14 @@
 #define OBJECTIVEFUNCTION_HPP
 
 #include <cmath>
+#include <vector>
 
-const int DIMENSIONS = 2;
 const int NUM_MOTHS = 1024;
 const int MAX_ITERATIONS = 1000;
 
 /*
 // Rosenbrock function
-#define DIMENSIONS 1 // Number of dimensions in the optimization problem
+constexpr int DIMENSIONS = 1; // Number of dimensions in the optimization problem
 
 double objectiveFunction(const std::vector<double>& position) {
     double x = position[0];
@@ -17,9 +17,10 @@ double objectiveFunction(const std::vector<double>& position) {
 }
 */
 
-/*
+
+
 // Rastrigin function
-#define DIMENSIONS 2 // Number of dimensions in the optimization problem
+constexpr int DIMENSIONS = 2; // Number of dimensions in the optimization problem
 
 double objectiveFunction(const std::vector<double>& position) {
     double sum = 0.0;
@@ -29,11 +30,11 @@ double objectiveFunction(const std::vector<double>& position) {
     }
     return 20.0 + sum;
 }
-*/
+
 
 /*
 // Griewank function
-#define DIMENSIONS 3 // Number of dimensions in the optimization problem
+constexpr int DIMENSIONS = 3; // Number of dimensions in the optimization problem
 
 double objectiveFunction(const std::vector<double>& position) {
     double x = position[0];
@@ -43,10 +44,9 @@ double objectiveFunction(const std::vector<double>& position) {
 }
 */
 
-
-
+/*
 // Schaffer function N.4
-#define DIMENSIONS 4 // Number of dimensions in the optimization problem
+constexpr int DIMENSIONS = 4; // Number of dimensions in the optimization problem
 
 double objectiveFunction(const std::vector<double>& position) {
     double x = position[0];
@@ -55,6 +55,6 @@ double objectiveFunction(const std::vector<double>& position) {
     double denominator = pow(1.0 + 0.001 * (x * x + y * y), 2);
     return 0.5 + numerator / denominator;
 }
-
+*/
 
 #endif
