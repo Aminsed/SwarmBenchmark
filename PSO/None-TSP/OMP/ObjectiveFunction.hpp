@@ -20,7 +20,7 @@ double objectiveFunction(const std::vector<double>& position) {
 }
 */
 
-
+/*
 // Rastrigin function
 constexpr int DIMENSIONS = 2; // Number of dimensions in the optimization problem
 
@@ -32,7 +32,7 @@ double objectiveFunction(const std::vector<double>& position) {
     }
     return 20.0 + sum;
 }
-
+*/
 
 /*
 // Griewank function
@@ -46,17 +46,21 @@ double objectiveFunction(const std::vector<double>& position) {
 }
 */
 
-/*
+
 // Schaffer function N.4
 constexpr int DIMENSIONS = 4; // Number of dimensions in the optimization problem
 
 double objectiveFunction(const std::vector<double>& position) {
-    double x = position[0];
-    double y = position[1];
-    double numerator = pow(cos(sin(fabs(x * x - y * y))), 2) - 0.5;
-    double denominator = pow(1.0 + 0.001 * (x * x + y * y), 2);
-    return 0.5 + numerator / denominator;
+    double sum = 0.0;
+    for (int i = 0; i < DIMENSIONS - 1; i++) {
+        double xi = position[i];
+        double xi_plus_1 = position[i + 1];
+        double numerator = pow(cos(sin(fabs(xi * xi - xi_plus_1 * xi_plus_1))), 2) - 0.5;
+        double denominator = pow(1.0 + 0.001 * (xi * xi + xi_plus_1 * xi_plus_1), 2);
+        sum += 0.5 + numerator / denominator;
+    }
+    return sum;
 }
-*/
+
 
 #endif
