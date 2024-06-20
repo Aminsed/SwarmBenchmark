@@ -50,11 +50,15 @@ return 1.0 + (x * x + y * y + z * z) / 4000.0 - cos(x) * cos(y / sqrt(2.0)) * co
 // Schaffer function N.4
 #define DIMENSIONS 4 // Number of dimensions in the optimization problem
 __device__ double objectiveFunction(double* position) {
-double x = position[0];
-double y = position[1];
-double numerator = pow(cos(sin(fabs(x * x - y * y))), 2) - 0.5;
-double denominator = pow(1.0 + 0.001 * (x * x + y * y), 2);
-return 0.5 + numerator / denominator;
+    double sum = 0.0;
+    for (int i = 0; i < DIMENSIONS - 1; i++) {
+        double xi = position[i];
+        double xi_plus_1 = position[i + 1];
+        double numerator = pow(cos(sin(fabs(xi * xi - xi_plus_1 * xi_plus_1))), 2) - 0.5;
+        double denominator = pow(1.0 + 0.001 * (xi * xi + xi_plus_1 * xi_plus_1), 2);
+        sum += 0.5 + numerator / denominator;
+    }
+    return sum;
 }
 */
 
