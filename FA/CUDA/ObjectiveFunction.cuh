@@ -51,7 +51,6 @@ __device__ double objectiveFunction(double* position) {
 */
 
 
-
 // Schaffer function N.4
 #define DIMENSIONS 4 // Number of dimensions in the optimization problem
 
@@ -65,6 +64,7 @@ __device__ double objectiveFunction(double* position) {
         sum += 0.5 + numerator / denominator;
     }
     return sum;
+}
 
 
 #endif
