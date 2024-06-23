@@ -18,13 +18,13 @@ __device__ void updatePheromone(double* pheromone, double* bestPosition, double 
     }
 }
 
-__global__ void initializeAnts(Ant* ants, double* pheromone, curandState* state) {
+__global__ void initializeAnts(Ant* ants, double* pheromone, curandState* state, unsigned long long seed) {
     int tid = blockIdx.x * blockDim.x + threadIdx.x;
     if (tid < NUM_ANTS) {
+        curand_init(seed, tid, 0, &state[tid]);
         Ant* a = &ants[tid];
-        curandState* s = &state[tid];
         for (int i = 0; i < DIMENSIONS; i++) {
-            a->position[i] = curand_uniform_double(s) * 10.0 - 5.0;
+            a->position[i] = curand_uniform_double(&state[tid]) * 10.0 - 5.0;
             pheromone[i] = 1.0;
         }
         a->fitness = objectiveFunction(a->position);
@@ -33,35 +33,54 @@ __global__ void initializeAnts(Ant* ants, double* pheromone, curandState* state)
 
 __global__ void updateAnts(Ant* ants, double* pheromone, double* bestPosition, double* bestFitness, curandState* state) {
     int tid = blockIdx.x * blockDim.x + threadIdx.x;
+    __shared__ double sharedBestPosition[DIMENSIONS];
+    __shared__ double sharedBestFitness;
+
+    if (threadIdx.x == 0) {
+        sharedBestFitness = *bestFitness;
+        for (int i = 0; i < DIMENSIONS; i++) {
+            sharedBestPosition[i] = bestPosition[i];
+        }
+    }
+    __syncthreads();
+
     if (tid < NUM_ANTS) {
         Ant* a = &ants[tid];
-        curandState* s = &state[tid];
         for (int i = 0; i < DIMENSIONS; i++) {
-            double r = curand_uniform_double(s);
+            double r = curand_uniform_double(&state[tid]);
             if (r < PHEROMONE_WEIGHT) {
-                a->position[i] = bestPosition[i] + (curand_uniform_double(s) * 2.0 - 1.0);
+                a->position[i] = sharedBestPosition[i] + (curand_uniform_double(&state[tid]) * 2.0 - 1.0);
             } else {
-                a->position[i] += curand_uniform_double(s) * 2.0 - 1.0;
+                a->position[i] += curand_uniform_double(&state[tid]) * 2.0 - 1.0;
             }
         }
         a->fitness = objectiveFunction(a->position);
-        if (a->fitness < *bestFitness) {
-            *bestFitness = a->fitness;
+        
+        // Update best fitness and position using shared memory
+        if (a->fitness < sharedBestFitness) {
+            sharedBestFitness = a->fitness;
             for (int i = 0; i < DIMENSIONS; i++) {
-                bestPosition[i] = a->position[i];
+                sharedBestPosition[i] = a->position[i];
             }
         }
     }
     __syncthreads();
-    if (tid == 0) {
-        updatePheromone(pheromone, bestPosition, *bestFitness);
+
+    // Update global best fitness and position
+    if (threadIdx.x == 0) {
+        if (sharedBestFitness < *bestFitness) {
+            *bestFitness = sharedBestFitness;
+            for (int i = 0; i < DIMENSIONS; i++) {
+                bestPosition[i] = sharedBestPosition[i];
+            }
+        }
     }
 }
 
 
 void runACO(Ant* ants, double* pheromone, double* bestPosition, double* bestFitness, curandState* state) {
     std::ofstream outputFile("results.txt");
-    dim3 block(256);
+    dim3 block(BLOCK_SIZE);
     dim3 grid((NUM_ANTS + block.x - 1) / block.x);
     for (int iter = 0; iter < MAX_ITERATIONS; iter++) {
         updateAnts<<<grid, block>>>(ants, pheromone, bestPosition, bestFitness, state);
@@ -98,29 +117,43 @@ int main() {
     double* bestPosition;
     double* bestFitness;
     curandState* state;
+    
     cudaMalloc(&ants, NUM_ANTS * sizeof(Ant));
     cudaMalloc(&pheromone, DIMENSIONS * sizeof(double));
     cudaMalloc(&bestPosition, DIMENSIONS * sizeof(double));
     cudaMalloc(&bestFitness, sizeof(double));
     cudaMalloc(&state, NUM_ANTS * sizeof(curandState));
+    
     double initialFitness = INFINITY;
     cudaMemcpy(bestFitness, &initialFitness, sizeof(double), cudaMemcpyHostToDevice);
+    
     auto start = std::chrono::high_resolution_clock::now();
-    initializeAnts<<<(NUM_ANTS + BLOCK_SIZE - 1) / BLOCK_SIZE, BLOCK_SIZE>>>(ants, pheromone, state);
+    
+    unsigned long long seed = time(NULL);
+    dim3 block(BLOCK_SIZE);
+    dim3 grid((NUM_ANTS + block.x - 1) / block.x);
+    
+    initializeAnts<<<grid, block>>>(ants, pheromone, state, seed);
     cudaDeviceSynchronize();
+    
     runACO(ants, pheromone, bestPosition, bestFitness, state);
+    
     auto end = std::chrono::high_resolution_clock::now();
     double executionTime = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
+    
     double hostBestPosition[DIMENSIONS];
     double hostBestFitness;
     cudaMemcpy(hostBestPosition, bestPosition, DIMENSIONS * sizeof(double), cudaMemcpyDeviceToHost);
     cudaMemcpy(&hostBestFitness, bestFitness, sizeof(double), cudaMemcpyDeviceToHost);
+    
     printResults(hostBestPosition, hostBestFitness, executionTime);
+    
     cudaFree(ants);
     cudaFree(pheromone);
     cudaFree(bestPosition);
     cudaFree(bestFitness);
     cudaFree(state);
     cudaDeviceReset();
+    
     return 0;
 }
