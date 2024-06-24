@@ -33,45 +33,24 @@ __global__ void initializeAnts(Ant* ants, double* pheromone, curandState* state,
 
 __global__ void updateAnts(Ant* ants, double* pheromone, double* bestPosition, double* bestFitness, curandState* state) {
     int tid = blockIdx.x * blockDim.x + threadIdx.x;
-    __shared__ double sharedBestPosition[DIMENSIONS];
-    __shared__ double sharedBestFitness;
-
-    if (threadIdx.x == 0) {
-        sharedBestFitness = *bestFitness;
-        for (int i = 0; i < DIMENSIONS; i++) {
-            sharedBestPosition[i] = bestPosition[i];
-        }
-    }
-    __syncthreads();
 
     if (tid < NUM_ANTS) {
         Ant* a = &ants[tid];
         for (int i = 0; i < DIMENSIONS; i++) {
             double r = curand_uniform_double(&state[tid]);
             if (r < PHEROMONE_WEIGHT) {
-                a->position[i] = sharedBestPosition[i] + (curand_uniform_double(&state[tid]) * 2.0 - 1.0);
+                a->position[i] = bestPosition[i] + (curand_uniform_double(&state[tid]) * 2.0 - 1.0);
             } else {
                 a->position[i] += curand_uniform_double(&state[tid]) * 2.0 - 1.0;
             }
         }
         a->fitness = objectiveFunction(a->position);
         
-        // Update best fitness and position using shared memory
-        if (a->fitness < sharedBestFitness) {
-            sharedBestFitness = a->fitness;
+        // Update best fitness and position
+        if (a->fitness < *bestFitness) {
+            *bestFitness = a->fitness;
             for (int i = 0; i < DIMENSIONS; i++) {
-                sharedBestPosition[i] = a->position[i];
-            }
-        }
-    }
-    __syncthreads();
-
-    // Update global best fitness and position
-    if (threadIdx.x == 0) {
-        if (sharedBestFitness < *bestFitness) {
-            *bestFitness = sharedBestFitness;
-            for (int i = 0; i < DIMENSIONS; i++) {
-                bestPosition[i] = sharedBestPosition[i];
+                bestPosition[i] = a->position[i];
             }
         }
     }
