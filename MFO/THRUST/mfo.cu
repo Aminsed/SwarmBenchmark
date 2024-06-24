@@ -2,7 +2,7 @@
 #include <cuda_runtime.h>
 #include <curand_kernel.h>
 #include <thrust/device_vector.h>
-#include <thrust/sort.h>
+#include <thrust/host_vector.h>
 #include <chrono>
 #include <iostream>
 #include <iomanip>
@@ -69,38 +69,46 @@ __global__ void updateMoths(Moth* moths, Flame* flames, int* flameIndexes, curan
     }
 }
 
-struct CompareMoths {
-    __device__ bool operator()(const Moth& a, const Moth& b) {
-        return a.fitness < b.fitness;
-    }
-};
+__global__ void sortMothsByFitness(Moth* moths, int* flameIndexes) {
+    for (int i = 0; i < NUM_MOTHS - 1; i++) {
+        for (int j = 0; j < NUM_MOTHS - i - 1; j++) {
+            if (moths[j].fitness > moths[j + 1].fitness) {
+                Moth temp = moths[j];
+                moths[j] = moths[j + 1];
+                moths[j + 1] = temp;
 
-void runMFO(Moth* moths, Flame* flames, int* flameIndexes, curandState* state, double* bestFitness) {
+                int tempIndex = flameIndexes[j];
+                flameIndexes[j] = flameIndexes[j + 1];
+                flameIndexes[j + 1] = tempIndex;
+            }
+        }
+    }
+}
+
+void runMFO(thrust::device_vector<Moth>& d_moths, thrust::device_vector<Flame>& d_flames, thrust::device_vector<int>& d_flameIndexes, thrust::device_vector<curandState>& d_state, thrust::device_vector<double>& d_bestFitness) {
     dim3 block(BLOCK_SIZE);
     dim3 grid((NUM_MOTHS + block.x - 1) / block.x);
     std::ofstream outputFile("results.txt");
     for (int iter = 0; iter < MAX_ITERATIONS; iter++) {
-        updateMoths<<<grid, block>>>(moths, flames, flameIndexes, state, iter, bestFitness);
+        updateMoths<<<grid, block>>>(thrust::raw_pointer_cast(d_moths.data()), thrust::raw_pointer_cast(d_flames.data()), thrust::raw_pointer_cast(d_flameIndexes.data()), thrust::raw_pointer_cast(d_state.data()), iter, thrust::raw_pointer_cast(d_bestFitness.data()));
         cudaDeviceSynchronize();
-        thrust::device_ptr<Moth> mothsPtr(moths);
-        thrust::device_ptr<int> flameIndexesPtr(flameIndexes);
-        thrust::sort_by_key(mothsPtr, mothsPtr + NUM_MOTHS, flameIndexesPtr, CompareMoths());
+        sortMothsByFitness<<<1, 1>>>(thrust::raw_pointer_cast(d_moths.data()), thrust::raw_pointer_cast(d_flameIndexes.data()));
         cudaDeviceSynchronize();
         double currentBestFitness;
-        cudaMemcpy(&currentBestFitness, bestFitness, sizeof(double), cudaMemcpyDeviceToHost);
+        cudaMemcpy(&currentBestFitness, thrust::raw_pointer_cast(d_bestFitness.data()), sizeof(double), cudaMemcpyDeviceToHost);
         outputFile << iter + 1 << ": " << currentBestFitness << std::endl;
     }
     outputFile.close();
 }
 
-void printResults(Flame* flames, double* bestFitness, double executionTime) {
+void printResults(thrust::host_vector<Flame>& h_flames, double* bestFitness, double executionTime) {
     std::cout << std::fixed << std::setprecision(10);
     if (DIMENSIONS == 1) {
-        std::cout << "Best Flame Position: " << flames[0].position[0] << std::endl;
+        std::cout << "Best Flame Position: " << h_flames[0].position[0] << std::endl;
     } else {
         std::cout << "Best Flame Position: (";
         for (int i = 0; i < DIMENSIONS; i++) {
-            std::cout << flames[0].position[i];
+            std::cout << h_flames[0].position[i];
             if (i < DIMENSIONS - 1) {
                 std::cout << ", ";
             }
@@ -113,34 +121,37 @@ void printResults(Flame* flames, double* bestFitness, double executionTime) {
 }
 
 int main() {
-    Moth* moths;
-    Flame* flames;
-    int* flameIndexes;
-    curandState* state;
-    double* bestFitness;
-    cudaMalloc(&moths, NUM_MOTHS * sizeof(Moth));
-    cudaMalloc(&flames, NUM_MOTHS * sizeof(Flame));
-    cudaMalloc(&flameIndexes, NUM_MOTHS * sizeof(int));
-    cudaMalloc(&state, NUM_MOTHS * sizeof(curandState));
-    cudaMalloc(&bestFitness, sizeof(double));
+    thrust::device_vector<Moth> d_moths(NUM_MOTHS);
+    thrust::device_vector<Flame> d_flames(NUM_MOTHS);
+    thrust::device_vector<int> d_flameIndexes(NUM_MOTHS);
+    thrust::device_vector<curandState> d_state(NUM_MOTHS);
+    thrust::device_vector<double> d_bestFitness(1);
+
     double initialBestFitness = std::numeric_limits<double>::max();
-    cudaMemcpy(bestFitness, &initialBestFitness, sizeof(double), cudaMemcpyHostToDevice);
+    thrust::fill(d_bestFitness.begin(), d_bestFitness.end(), initialBestFitness);
+
     auto start = std::chrono::high_resolution_clock::now();
-    initializeMoths<<<(NUM_MOTHS + BLOCK_SIZE - 1) / BLOCK_SIZE, BLOCK_SIZE>>>(moths, flames, flameIndexes, state);
+
+    initializeMoths<<<(NUM_MOTHS + BLOCK_SIZE - 1) / BLOCK_SIZE, BLOCK_SIZE>>>(
+        thrust::raw_pointer_cast(d_moths.data()), 
+        thrust::raw_pointer_cast(d_flames.data()), 
+        thrust::raw_pointer_cast(d_flameIndexes.data()), 
+        thrust::raw_pointer_cast(d_state.data())
+    );
     cudaDeviceSynchronize();
-    runMFO(moths, flames, flameIndexes, state, bestFitness);
+
+    runMFO(d_moths, d_flames, d_flameIndexes, d_state, d_bestFitness);
+
     auto end = std::chrono::high_resolution_clock::now();
     double executionTime = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
-    Flame hostFlames[NUM_MOTHS];
+
+    thrust::host_vector<Flame> h_flames = d_flames;
     double hostBestFitness;
-    cudaMemcpy(hostFlames, flames, NUM_MOTHS * sizeof(Flame), cudaMemcpyDeviceToHost);
-    cudaMemcpy(&hostBestFitness, bestFitness, sizeof(double), cudaMemcpyDeviceToHost);
-    printResults(hostFlames, &hostBestFitness, executionTime);
-    cudaFree(moths);
-    cudaFree(flames);
-    cudaFree(flameIndexes);
-    cudaFree(state);
-    cudaFree(bestFitness);
+    cudaMemcpy(&hostBestFitness, thrust::raw_pointer_cast(d_bestFitness.data()), sizeof(double), cudaMemcpyDeviceToHost);
+
+    printResults(h_flames, &hostBestFitness, executionTime);
+
     cudaDeviceReset();
+
     return 0;
 }
