@@ -23,10 +23,12 @@ __device__ void updateFlame(Moth* m, Flame* flame, double* bestFitness) {
             flame->position[i] = m->position[i];
         }
     }
+    // Update bestFitness without atomicMin
     if (fitness < *bestFitness) {
         *bestFitness = fitness;
     }
 }
+
 
 __global__ void initializeMoths(Moth* moths, Flame* flames, int* flameIndexes, curandState* state) {
     int tid = blockIdx.x * blockDim.x + threadIdx.x;
@@ -44,6 +46,7 @@ __global__ void initializeMoths(Moth* moths, Flame* flames, int* flameIndexes, c
     }
 }
 
+
 __global__ void updateMoths(Moth* moths, Flame* flames, int* flameIndexes, curandState* state, int iter, double* bestFitness) {
     int tid = blockIdx.x * blockDim.x + threadIdx.x;
     if (tid < NUM_MOTHS) {
@@ -52,43 +55,37 @@ __global__ void updateMoths(Moth* moths, Flame* flames, int* flameIndexes, curan
         int flameIndex = flameIndexes[tid];
         Flame* flame = &flames[flameIndex];
         for (int i = 0; i < DIMENSIONS; i++) {
-            double t = (double)iter / MAX_ITERATIONS;
+            double t = static_cast<double>(iter) / MAX_ITERATIONS;
             double r = curand_uniform_double(s);
             double b = 1.0;
-            double distance = std::abs(flame->position[i] - m->position[i]);
+            double distance = fabs(flame->position[i] - m->position[i]);
             if (r < 0.5) {
-                m->position[i] = distance * std::exp(b * t) * std::cos(t * 2 * M_PI) + flame->position[i];
+                m->position[i] = distance * exp(b * t) * cos(t * 2 * M_PI) + flame->position[i];
             } else {
-                m->position[i] = distance * std::exp(b * t) * std::sin(t * 2 * M_PI) + flame->position[i];
+                m->position[i] = distance * exp(b * t) * sin(t * 2 * M_PI) + flame->position[i];
             }
         }
-        m->fitness = objectiveFunction(m->position);        updateFlame(m, flame, bestFitness);
+        m->fitness = objectiveFunction(m->position);
+        updateFlame(m, flame, bestFitness);
     }
 }
 
 __global__ void sortMothsByFitness(Moth* moths, int* flameIndexes) {
-    extern __shared__ Moth sharedMoths[];
-    int tid = threadIdx.x;
-    int i = blockIdx.x * blockDim.x + threadIdx.x;
-    if (i < NUM_MOTHS) {
-        sharedMoths[tid] = moths[i];
-    }
-    __syncthreads();
-    for (int stride = blockDim.x / 2; stride > 0; stride >>= 1) {
-        if (tid < stride && i + stride < NUM_MOTHS) {
-            if (sharedMoths[tid].fitness > sharedMoths[tid + stride].fitness) {
-                Moth temp = sharedMoths[tid];
-                sharedMoths[tid] = sharedMoths[tid + stride];
-                sharedMoths[tid + stride] = temp;
-                int tempIndex = flameIndexes[i];
-                flameIndexes[i] = flameIndexes[i + stride];
-                flameIndexes[i + stride] = tempIndex;
+    // Implement bubble sort (inefficient but simple)
+    for (int i = 0; i < NUM_MOTHS - 1; i++) {
+        for (int j = 0; j < NUM_MOTHS - i - 1; j++) {
+            if (moths[j].fitness > moths[j + 1].fitness) {
+                // Swap moths
+                Moth temp = moths[j];
+                moths[j] = moths[j + 1];
+                moths[j + 1] = temp;
+
+                // Swap flame indexes
+                int tempIndex = flameIndexes[j];
+                flameIndexes[j] = flameIndexes[j + 1];
+                flameIndexes[j + 1] = tempIndex;
             }
         }
-        __syncthreads();
-    }
-    if (i < NUM_MOTHS) {
-        moths[i] = sharedMoths[tid];
     }
 }
 
@@ -99,11 +96,12 @@ void runMFO(Moth* moths, Flame* flames, int* flameIndexes, curandState* state, d
     for (int iter = 0; iter < MAX_ITERATIONS; iter++) {
         updateMoths<<<grid, block>>>(moths, flames, flameIndexes, state, iter, bestFitness);
         cudaDeviceSynchronize();
-        sortMothsByFitness<<<grid, block, NUM_MOTHS * sizeof(Moth)>>>(moths, flameIndexes);
+        sortMothsByFitness<<<1, 1>>>(moths, flameIndexes);
         cudaDeviceSynchronize();
         double currentBestFitness;
         cudaMemcpy(&currentBestFitness, bestFitness, sizeof(double), cudaMemcpyDeviceToHost);
-        outputFile << iter + 1 << ": " << currentBestFitness << std::endl;    }
+        outputFile << iter + 1 << ": " << currentBestFitness << std::endl;
+    }
     outputFile.close();
 }
 
