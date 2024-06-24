@@ -57,11 +57,11 @@ __global__ void updateMoths(Moth* moths, Flame* flames, int* flameIndexes, curan
             double t = (double)iter / MAX_ITERATIONS;
             double r = curand_uniform_double(s);
             double b = 1.0;
-            double distance = std::abs(flame->position[i] - m->position[i]);
+            double distance = fabs(flame->position[i] - m->position[i]);
             if (r < 0.5) {
-                m->position[i] = distance * std::exp(b * t) * std::cos(t * 2 * M_PI) + flame->position[i];
+                m->position[i] = distance * exp(b * t) * cos(t * 2 * M_PI) + flame->position[i];
             } else {
-                m->position[i] = distance * std::exp(b * t) * std::sin(t * 2 * M_PI) + flame->position[i];
+                m->position[i] = distance * exp(b * t) * sin(t * 2 * M_PI) + flame->position[i];
             }
         }
         m->fitness = objectiveFunction(m->position);
