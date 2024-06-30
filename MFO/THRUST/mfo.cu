@@ -120,7 +120,11 @@ void printResults(thrust::host_vector<Flame>& h_flames, double* bestFitness, dou
     std::cout << "Execution Time: " << executionTime << " milliseconds" << std::endl;
 }
 
+
 int main() {
+    // Add error checking for CUDA operations
+    cudaError_t cudaStatus;
+
     thrust::device_vector<Moth> d_moths(NUM_MOTHS);
     thrust::device_vector<Flame> d_flames(NUM_MOTHS);
     thrust::device_vector<int> d_flameIndexes(NUM_MOTHS);
@@ -138,7 +142,11 @@ int main() {
         thrust::raw_pointer_cast(d_flameIndexes.data()), 
         thrust::raw_pointer_cast(d_state.data())
     );
-    cudaDeviceSynchronize();
+    cudaStatus = cudaDeviceSynchronize();
+    if (cudaStatus != cudaSuccess) {
+        std::cerr << "cudaDeviceSynchronize failed: " << cudaGetErrorString(cudaStatus) << std::endl;
+        return 1;
+    }
 
     runMFO(d_moths, d_flames, d_flameIndexes, d_state, d_bestFitness);
 
@@ -147,11 +155,12 @@ int main() {
 
     thrust::host_vector<Flame> h_flames = d_flames;
     double hostBestFitness;
-    cudaMemcpy(&hostBestFitness, thrust::raw_pointer_cast(d_bestFitness.data()), sizeof(double), cudaMemcpyDeviceToHost);
+    cudaStatus = cudaMemcpy(&hostBestFitness, thrust::raw_pointer_cast(d_bestFitness.data()), sizeof(double), cudaMemcpyDeviceToHost);
+    if (cudaStatus != cudaSuccess) {
+        std::cerr << "cudaMemcpy failed: " << cudaGetErrorString(cudaStatus) << std::endl;
+        return 1;
+    }
 
     printResults(h_flames, &hostBestFitness, executionTime);
-
-    cudaDeviceReset();
-
     return 0;
 }
