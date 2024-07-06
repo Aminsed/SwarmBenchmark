@@ -4,16 +4,16 @@ Welcome to the Swarm Intelligence Algorithms Repository! This repository contain
 
 ## Algorithms Included
 
-1. Particle Swarm Optimization (PSO)
-2. Firefly Algorithm (FA)
-3. Moth-Flame Optimization (MFO) Algorithm
-4. Grey Wolf Optimizer (GWO)
-5. Whale Optimization Algorithm (WOA)
-6. Artificial Bee Colony (ABC) Algorithm
-7. Dragonfly Algorithm (DA)
-8. Salp Swarm Algorithm (SSA)
-9. Grasshopper Optimization Algorithm (GOA)
-10. Ant Colony Optimization (ACO)
+1. [Particle Swarm Optimization (PSO)](./PSO/None-TSP/)
+2. [Firefly Algorithm (FA)](./FA)
+3. [Moth-Flame Optimization (MFO) Algorithm](./MFO)
+4. [Grey Wolf Optimizer (GWO)](./GWO)
+5. [Whale Optimization Algorithm (WOA)](./WOA)
+6. [Artificial Bee Colony (ABC) Algorithm](./ABC/None-TSP/)
+7. [Dragonfly Algorithm (DA)](./DA)
+8. [Salp Swarm Algorithm (SSA)](./SSA/)
+9. [Grasshopper Optimization Algorithm (GOA)](./GOA)
+10. [Ant Colony Optimization (ACO)](./ACO/None-TSP/)
 
 ## Repository Structure
 
@@ -45,6 +45,10 @@ These specifications were maintained consistently to evaluate the performance of
 ## Contributing
 
 Contributions to this repository are welcome! If you have an implementation of a swarm intelligence algorithm that is not currently included, or if you want to improve an existing implementation, please submit a pull request. Make sure to follow the repository's structure and provide clear instructions on how to compile and run your code.
+
+## Further Reading
+
+For a detailed benchmarking study using the findings of this repository, you can read the article [Swarm Intelligence Showdown: A Benchmarking Study](https://medium.com/@amin32846/swarm-intelligence-showdown-a-benchmarking-study-a94cc2ca598c) on Medium.
 
 ## License
 

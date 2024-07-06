@@ -4,7 +4,7 @@
 
 ## Introduction
 
-The Grasshopper Optimization Algorithm (GOA) is a nature-inspired metaheuristic optimization algorithm that mimics the swarming behavior of grasshoppers. It was introduced by Saremi et al. in 2017. GOA is designed to solve various optimization problems efficiently and effectively.
+The [Grasshopper Optimization Algorithm (GOA)](https://www.sciencedirect.com/science/article/abs/pii/S0965997816305646) is a nature-inspired metaheuristic optimization algorithm that mimics the swarming behavior of grasshoppers. It was introduced by Saremi et al. in 2017. GOA is designed to solve various optimization problems efficiently and effectively.
 
 ## Mathematical Formula
 

@@ -3,7 +3,7 @@
 ![Alt Text](https://gitlab.com/aminse/swarm-intelligence/-/raw/main/images/particles.png)
 
 ## Introduction
-Particle Swarm Optimization (PSO) is a population-based optimization algorithm inspired by the social behavior of bird flocking or fish schooling. It is a metaheuristic algorithm that can be used to solve a wide range of optimization problems. PSO is particularly effective in solving continuous, non-linear, and multi-dimensional optimization problems. In this repository, the code will attempt to solve the Rastrigin function, a non-convex function used as a performance test problem for optimization algorithms.
+[Particle Swarm Optimization (PSO)](https://ieeexplore.ieee.org/document/488968/metrics#metrics) is a population-based optimization algorithm inspired by the social behavior of bird flocking or fish schooling. It is a metaheuristic algorithm that can be used to solve a wide range of optimization problems. PSO is particularly effective in solving continuous, non-linear, and multi-dimensional optimization problems. In this repository, the code will attempt to solve the Rastrigin function, a non-convex function used as a performance test problem for optimization algorithms.
 
 ![Alt Text](https://upload.wikimedia.org/wikipedia/commons/8/8b/Rastrigin_function.png)
 

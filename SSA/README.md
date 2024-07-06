@@ -4,7 +4,7 @@
 
 ## Introduction
 
-The Salp Swarm Algorithm (SSA) is a swarm intelligence-based optimization algorithm inspired by the swarming behavior of salps in the ocean. Salps are barrel-shaped, gelatinous zooplankton that form long chains to move efficiently in the water. The SSA mimics this behavior to solve optimization problems by simulating the movement of salps in the search space.
+The [Salp Swarm Algorithm (SSA)](https://www.sciencedirect.com/science/article/abs/pii/S0965997816307736) is a swarm intelligence-based optimization algorithm inspired by the swarming behavior of salps in the ocean. Salps are barrel-shaped, gelatinous zooplankton that form long chains to move efficiently in the water. The SSA mimics this behavior to solve optimization problems by simulating the movement of salps in the search space.
 
 ## Mathematical Formula
 

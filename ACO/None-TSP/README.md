@@ -4,7 +4,7 @@
 
 ## Introduction
 
-The Ant Colony Optimization (ACO) algorithm is a nature-inspired metaheuristic optimization algorithm that mimics the foraging behavior of ants. It was introduced by Marco Dorigo in 1992. ACO is designed to solve various optimization problems, particularly those related to finding optimal paths in graphs.
+[The Ant Colony Optimization (ACO)](https://www.researchgate.net/publication/308953674_Ant_Colony_Optimization) algorithm is a nature-inspired metaheuristic optimization algorithm that mimics the foraging behavior of ants. It was introduced by Marco Dorigo in 1992. ACO is designed to solve various optimization problems, particularly those related to finding optimal paths in graphs.
 
 ## Mathematical Formula
 
