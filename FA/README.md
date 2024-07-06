@@ -3,7 +3,7 @@
 ![Alt Text](https://gitlab.com/aminse/swarm-intelligence/-/raw/main/images/fire_fly.png)
 
 ## Introduction
-Firefly Algorithm (FA) is a population-based optimization algorithm inspired by the flashing behavior of fireflies. It is a metaheuristic algorithm that can be used to solve a wide range of optimization problems. FA is particularly effective in solving continuous, non-linear, and multi-dimensional optimization problems. In this repository, the code will attempt to solve the Rosenbrock function, a non-convex function used as a performance test problem for optimization algorithms.
+[Firefly Algorithm (FA)](https://arxiv.org/abs/1003.1466) is a population-based optimization algorithm inspired by the flashing behavior of fireflies. It is a metaheuristic algorithm that can be used to solve a wide range of optimization problems. FA is particularly effective in solving continuous, non-linear, and multi-dimensional optimization problems. In this repository, the code will attempt to solve the Rosenbrock function, a non-convex function used as a performance test problem for optimization algorithms.
 
 ![Alt Text](https://upload.wikimedia.org/wikipedia/commons/1/11/Rosenbrock3.gif)
 

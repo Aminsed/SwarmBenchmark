@@ -3,7 +3,7 @@
 ![Alt Text](https://gitlab.com/aminse/swarm-intelligence/-/raw/main/images/wolf.png)
 
 ## Introduction
-Grey Wolf Optimizer (GWO) is a nature-inspired optimization algorithm that mimics the social hierarchy and hunting behavior of grey wolves in a pack. The algorithm simulates the leadership hierarchy and hunting mechanisms of grey wolves to solve optimization problems. In GWO, the wolves are categorized into four types: alpha, beta, delta, and omega, representing the different levels of leadership and roles within the pack.
+[Grey Wolf Optimizer (GWO)](https://www.sciencedirect.com/science/article/abs/pii/S0965997813001853) is a nature-inspired optimization algorithm that mimics the social hierarchy and hunting behavior of grey wolves in a pack. The algorithm simulates the leadership hierarchy and hunting mechanisms of grey wolves to solve optimization problems. In GWO, the wolves are categorized into four types: alpha, beta, delta, and omega, representing the different levels of leadership and roles within the pack.
 
 ## Mathematical Formula
 The Grey Wolf Optimizer algorithm is based on the following mathematical formulas:

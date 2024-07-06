@@ -2,7 +2,7 @@
 ![Alt Text](https://gitlab.com/aminse/swarm-intelligence/-/raw/main/images/bee_colony.png)
 ## Introduction
 
-Artificial Bee Colony (ABC) Algorithm is a swarm intelligence-based optimization algorithm inspired by the foraging behavior of honey bees. The algorithm simulates the collective intelligence of a bee colony in searching for the best food sources. In ABC, the bees are divided into three types: employed bees, onlooker bees, and scout bees. Each type of bee plays a specific role in the search process to find the optimal solution.
+[Artificial Bee Colony (ABC)](https://www.researchgate.net/publication/221498082_Artificial_Bee_Colony_ABC_Optimization_Algorithm_for_Solving_Constrained_Optimization_Problems) Algorithm is a swarm intelligence-based optimization algorithm inspired by the foraging behavior of honey bees. The algorithm simulates the collective intelligence of a bee colony in searching for the best food sources. In ABC, the bees are divided into three types: employed bees, onlooker bees, and scout bees. Each type of bee plays a specific role in the search process to find the optimal solution.
 
 ## Mathematical Formula
 

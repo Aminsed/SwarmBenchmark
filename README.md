@@ -4,16 +4,16 @@ Welcome to the Swarm Intelligence Algorithms Repository! This repository contain
 
 ## Algorithms Included
 
-1. Particle Swarm Optimization (PSO)
-2. Firefly Algorithm (FA)
-3. Moth-Flame Optimization (MFO) Algorithm
-4. Grey Wolf Optimizer (GWO)
-5. Whale Optimization Algorithm (WOA)
-6. Artificial Bee Colony (ABC) Algorithm
-7. Dragonfly Algorithm (DA)
-8. Salp Swarm Algorithm (SSA)
-9. Grasshopper Optimization Algorithm (GOA)
-10. Ant Colony Optimization (ACO)
+1. [Particle Swarm Optimization (PSO)](./PSO)
+2. [Firefly Algorithm (FA)](./FA)
+3. [Moth-Flame Optimization (MFO) Algorithm](./MFO)
+4. [Grey Wolf Optimizer (GWO)](./GWO)
+5. [Whale Optimization Algorithm (WOA)](./WOA)
+6. [Artificial Bee Colony (ABC) Algorithm](./ABC)
+7. [Dragonfly Algorithm (DA)](./DA)
+8. [Salp Swarm Algorithm (SSA)](./SSA)
+9. [Grasshopper Optimization Algorithm (GOA)](./GOA)
+10. [Ant Colony Optimization (ACO)](./ACO)
 
 ## Repository Structure
 
