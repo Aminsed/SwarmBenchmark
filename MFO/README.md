@@ -4,7 +4,7 @@
 
 ## Introduction
 
-[Moth-flame Optimization (MFO)](https://www.sciencedirect.com/science/article/abs/pii/S0950705115002580)is a nature-inspired optimization algorithm that mimics the navigation behavior of moths in nature. Moths are known to fly in a spiral path around artificial lights, maintaining a fixed angle with respect to the light source. The MFO algorithm leverages this behavior to solve optimization problems by considering moths as search agents and the best positions as flames.
+[Moth-flame Optimization (MFO)](https://www.sciencedirect.com/science/article/abs/pii/S0950705115002580) is a nature-inspired optimization algorithm that mimics the navigation behavior of moths in nature. Moths are known to fly in a spiral path around artificial lights, maintaining a fixed angle with respect to the light source. The MFO algorithm leverages this behavior to solve optimization problems by considering moths as search agents and the best positions as flames.
 
 ## Mathematical Formula
 
